@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-08-21T14:18:25Z" product-name="pubman_importer">
+		<header/>
+		<body>
+			<trans-unit id="member.description">
+				<source>member</source>
+			</trans-unit>
+			<trans-unit id="publication.description">
+				<source>publication</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

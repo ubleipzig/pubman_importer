@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-08-21T14:18:25Z" product-name="pubman_importer">
+		<header/>
+		<body>
+			<trans-unit id="tx_pubmanimporter_domain_model_publication">
+				<source>Publication</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_publication.component">
+				<source>Component</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_publication.organization">
+				<source>Organization</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_publication.author">
+				<source>Author</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_author">
+				<source>Author</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_author.publication">
+				<source>Publication</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_author.organization">
+				<source>Organization</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_organization">
+				<source>Organization</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_organization.member">
+				<source>Member</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_organization.publication">
+				<source>Publication</source>
+			</trans-unit>
+			<trans-unit id="tx_pubmanimporter_domain_model_component">
+				<source>Component</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
