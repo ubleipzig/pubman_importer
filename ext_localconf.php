@@ -10,14 +10,14 @@ if (!defined('TYPO3_MODE')) {
 		'Publication' => 'list, show',
 		'Author' => 'list, show',
 		'Organization' => 'list, show',
-		
+
 	),
 	// non-cacheable actions
 	array(
 		'Publication' => '',
 		'Author' => '',
 		'Organization' => '',
-		
+
 	)
 );
 
@@ -28,13 +28,13 @@ if (!defined('TYPO3_MODE')) {
 		'Publication' => 'list, show',
 		'Author' => 'list, show',
 		'Organization' => 'list, show',
-		
+
 	),
 	// non-cacheable actions
 	array(
 		'Publication' => '',
 		'Author' => '',
 		'Organization' => '',
-		
+
 	)
 );

@@ -18,14 +18,22 @@ Otherwise your changes will be overwritten the next time you save the extension 
 <f:flashMessages renderMode="div" />
 
 <f:debug>{publications}</f:debug>
+<f:debug>{params}</f:debug>
+<f:debug>{sourceUrl}</f:debug>
 
 <div  class="tx_pubmanimporter" >
 
     <f:for each="{publications}" as="publication">
         <ul>
             <li class="publication">
-                <a href="{publication.link}">{publication.title}</a>
-                <f:link.action action="list" arguments="{objectId : publication.objectId}">List</f:link.action>
+                <f:if condition="{publication.hasChildren}">
+                    <a href="{publication.link}">
+                </f:if>
+                {publication.title}
+                <f:if condition="{publication.hasChildren}">
+                </a>
+                </f:if>
+                <a href="{publication.source_url}{publication.fulltextlink}" title="{publication.properties.mime-type}">{publication.properties.file-name}</a>
             </li>
 
         </ul>
@@ -36,5 +44,5 @@ Otherwise your changes will be overwritten the next time you save the extension 
     </f:for>
 </div>
 
-<f:link.action action="new">New Publication sdfgsdg dsfgf</f:link.action>
+<f:link.action action="new">New Publication</f:link.action>
 </f:section>

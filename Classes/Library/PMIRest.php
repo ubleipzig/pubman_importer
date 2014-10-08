@@ -393,15 +393,25 @@ class PMIRest {
             $content = "";
 	    $extFulltext = "";
             $license = "";
+            $properties = array();
+            $storage = "";
             if ($componentNodes) {
                 $componentNodeList = $componentNodes->childNodes;
                 $componentArray = $this->dnl2array($componentNodeList);
                 foreach ($componentArray as $componentNode) {
+                    // extract properties
+                    $propertiesNode = $this->getNodeByPath($componentNode, array('escidocComponents:properties'));
+                    if ($propertiesNode) {
+                        $properties['file-name'] = $this->getNodeValueByPath($propertiesNode, array('prop:file-name'));
+                        $properties['mime-type'] = $this->getNodeValueByPath($propertiesNode, array('prop:mime-type'));
+                    }
                     // extract full text links
                     $contentNode = $this->getNodeByPath($componentNode, array('escidocComponents:content'));
                     If ($contentNode) {
-                        if ($this->getNodeAttr($contentNode, 'storage') == "internal-managed") {
-                            $fulltextLink = $this->getNodeAttr($contentNode, 'href');
+                        $storage = $this->getNodeAttr($contentNode, 'storage');
+                        $href = $this->getNodeAttr($contentNode, 'href');
+                        if ($storage == "internal-managed") {
+                            $fulltextLink = $href;
                             if ($fulltextLink != "") {
                                 if ($content != "") {
                                     $content .= "||$fulltextLink";
@@ -410,9 +420,9 @@ class PMIRest {
                                 }
                                 PMILog::debug("Found fulltext link: $fulltextLink");
                             }
-                        } else if ($this->getNodeAttr($contentNode, 'storage') == "external-url") {
+                        } else if ($storage == "external-url") {
                             // seems to be an external reference
-			    $externalFulltextLink = $this->getNodeAttr($contentNode, 'href');
+			    $externalFulltextLink = $href;
 			    if ($externalFulltextLink != '') {
 				if ($extFulltext != '') {
 					$extFulltext .= "||$externalFulltextLink";
@@ -518,8 +528,10 @@ class PMIRest {
 
             $post['escidoc_content'] = $this->getNodeByPath($escidocItem, array('escidocItem:properties', 'prop:content-model-specific', 'dcterms:bibliographicCitation'))->textContent;
             $post['escidoc_title'] = $this->getNodeValueByPath($publication, array('dc:title'));
+            $post['properties'] = $properties;
             $post['fulltextlink'] = $content;
 	    $post['extfulltextlink'] = $extFulltext;
+            $post['storage'] = $storage;
             // get a date that can be used for the wp post
             $dateEventEnd = $this->getNodeValueByPath($publication, array('event:event', 'eterms:end-date'));
             if ($dateEventEnd == "") {

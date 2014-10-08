@@ -57,17 +57,38 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
                 $publications = $pubRepo->loadList();
             }
 
+            $mimeType = $params['properties']['mime-type'];
+
             $this->view->assign('publications', $publications);
+            $this->view->assign('params', $params);
+            $this->view->assign('sourceUrl', $pubRepo);
 	}
 
-	/**
-	 * action show
-	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publication
-	 * @return void
-	 */
-	public function showAction(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publication) {
+//	/**
+//	 * action show
+//	 *
+//	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publication
+//	 * @return void
+//	 */
+//	public function showAction(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publication) {
+//            $this->view->assign('publication', $publication);
+//	}
+
+        /**
+//	 * action show
+//	 *
+//	 * @return void
+//	 */
+        public function showAction() {
+            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('pubmanimporter');
+
+            $pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository');
+
+            $publication = $pubRepo->loadList($params['objectId']);
+
+
             $this->view->assign('publication', $publication);
-	}
+
+        }
 
 }

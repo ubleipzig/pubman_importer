@@ -57,11 +57,14 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
         }
 
 
+
         private function getChildren($objectId, $startRecord, $maxRecords, $nestedCall = false) {
             $tmp_pubman_options = $this->pubman_options;
 
             $tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
                                                     urlencode($objectId) . '"+NOT+escidoc.objid%3D"' . urlencode($objectId) . '"))%20';
+           //$tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
+                                                    urlencode($objectId) . '"))%20';
 
             $citation = 'ESCIDOC_XML_V13'; //AJP, JUS, APA
 
@@ -81,6 +84,9 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
             if (count($items) > 0 && !$nestedCall) { //use nestedCall to traverse only one level down
                 for ($i=0; $i<count($items); $i++) {
 
+                    // server URL
+                    $items[$i]['source_url'] = $tmp_pubman_options['source_url'];
+
                     if (isset($items[$i]['object_id'])) {
                         //check for each child-item with an escidoc-id if it has children of its own
                        $childItems = $this->getChildren(($items[$i]['object_id']), $startRecord, $maxRecords, true);
@@ -92,10 +98,12 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
                        if ($items[$i]['hasChildren'] && !$nestedCall) {
                            //create link to list
                            $items[$i]['link'] = $this->cObject->getTypolink_URL($GLOBALS['TSFE']->id,
-                                                                                array( 'pubmanimporter[objectId]' => $items[$i]['object_id'], )
+                                                                                array( 'pubmanimporter[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'list', )
                                                                                );
                        } else {
-                           //create link to detail
+                           $items[$i]['link'] = $this->cObject->getTypolink_URL($GLOBALS['TSFE']->id,
+                                                                                array( 'pubmanimporter[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'show', )
+                                                                               );
                        }
                     }
 
