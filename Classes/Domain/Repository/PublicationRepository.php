@@ -32,101 +32,158 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Repository;
  */
 class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
-        private $cObject;
-        private $rootObjectId = "ubl:14001";
-        private $pubman_options = array (   'source_url'
-                                                => 'http://141.39.229.2',
-                                            'item_view'
-                                                => '/pubman/item',
-                                            'search_export_interface'
-                                                => '/search/SearchAndExport?cqlQuery=',
-                                            'search_string'
-                                                //Artikel zu Heft
-                                                //=> 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"ubl%3A14003"+NOT+escidoc.objid%3D"ubl%3A14003"))%20',
-                                                //Hefte zu Zeitschrift
-                                                => 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"ubl%3A14001"+NOT+escidoc.objid%3D"ubl%3A14001"))%20',
-                                            'fulltext_option_without'
-                                                => 1,
-                                            'fulltext_option_nonpublic'
-                                                => 1,
-                                        );
+    private $cObject;
+    private $rootObjectId = "ubl:14001";
+    private $pubman_options = array ( 
+        'source_url'                => 'http://141.39.229.2',
+        'item_view'                 => '/pubman/item',
+        'search_export_interface'   => '/search/SearchAndExport?cqlQuery=',
+         //Artikel zu Heft //=> 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"ubl%3A14003"+NOT+escidoc.objid%3D"ubl%3A14003"))%20',
+         //Hefte zu Zeitschrift
+        'search_string'             => 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"ubl%3A14001"+NOT+escidoc.objid%3D"ubl%3A14001"))%20',
+        'fulltext_option_without'   => 1,
+        'fulltext_option_nonpublic' => 1,
+    );
 
 
-        public function __construct() {
-            $this->cObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
-        }
+    public function __construct() {
+        $this->cObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
+    }
+
+    private function getAllItems() {
+        $tmp_pubman_options = $this->pubman_options;
+
+        $tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20(escidoc.context.objid=%22ubl%3A9001%22)%20AND%20(escidoc.publication.type=%22http%3A//purl.org/escidoc/metadata/ves/publication%5C-types/article%22)%20OR%20(escidoc.publication.type=%22http%3A//purl.org/escidoc/metadata/ves/publication%5C-types/issue%22)%20';
+
+        $citation = 'ESCIDOC_XML_V13'; //AJP, JUS, APA
+
+        $query = array( 'cqlQuery' => $tmp_pubman_options['search_string'],
+                        'exportFormat' => $citation, //ESCIDOC_XML_V13
+                        'outputFormat' => 'escidoc_snippet',
+                        'sortKeys' => 'escidoc.publication.source.issue',
+                        'sortOrder' => 'ascending',
+                        'startRecord' => $startRecord,
+                        'maximumRecords' => $maxRecords);
+
+        $rest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Library\PMIRest', $tmp_pubman_options);
+        $data = $rest->getData($tmp_pubman_options['search_export_interface'], $query);
+
+        $items = $rest->parseXML($data);
+
+        return $items;
+    }
 
 
 
-        private function getChildren($objectId, $startRecord, $maxRecords, $nestedCall = false) {
-            $tmp_pubman_options = $this->pubman_options;
+    private function getChildren($objectId, $startRecord, $maxRecords, $nestedCall = false) {
+        $tmp_pubman_options = $this->pubman_options;
 
-            $tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
-                                                    urlencode($objectId) . '"+NOT+escidoc.objid%3D"' . urlencode($objectId) . '"))%20';
-           //$tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
-                                                    urlencode($objectId) . '"))%20';
+        $tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
+                                                urlencode($objectId) . '"+NOT+escidoc.objid%3D"' . urlencode($objectId) . '"))%20';
+       //$tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
+                                               // urlencode($objectId) . '"))%20';
 
-            $citation = 'ESCIDOC_XML_V13'; //AJP, JUS, APA
+        $citation = 'ESCIDOC_XML_V13'; //AJP, JUS, APA
 
-            $query = array( 'cqlQuery' => $tmp_pubman_options['search_string'],
-                            'exportFormat' => $citation, //ESCIDOC_XML_V13
-                            'outputFormat' => 'escidoc_snippet',
-                            'sortKeys' => 'escidoc.publication.source.issue',
-                            'sortOrder' => 'ascending',
-                            'startRecord' => $startRecord,
-                            'maximumRecords' => $maxRecords);
+        $query = array( 'cqlQuery' => $tmp_pubman_options['search_string'],
+                        'exportFormat' => $citation, //ESCIDOC_XML_V13
+                        'outputFormat' => 'escidoc_snippet',
+                        'sortKeys' => 'escidoc.publication.source.issue',
+                        'sortOrder' => 'ascending',
+                        'startRecord' => $startRecord,
+                        'maximumRecords' => $maxRecords);
 
-            $rest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Library\PMIRest', $tmp_pubman_options);
-            $data = $rest->getData($tmp_pubman_options['search_export_interface'], $query);
+        $rest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Library\PMIRest', $tmp_pubman_options);
+        $data = $rest->getData($tmp_pubman_options['search_export_interface'], $query);
 
-            $items = $rest->parseXML($data);
+        $items = $rest->parseXML($data);
 
-            if (count($items) > 0 && !$nestedCall) { //use nestedCall to traverse only one level down
-                for ($i=0; $i<count($items); $i++) {
+        if (count($items) > 0 && !$nestedCall) { //use nestedCall to traverse only one level down
+            for ($i=0; $i<count($items); $i++) {
 
-                    // server URL
-                    $items[$i]['source_url'] = $tmp_pubman_options['source_url'];
+                // server URL
+                $items[$i]['source_url'] = $tmp_pubman_options['source_url'];
 
-                    if (isset($items[$i]['object_id'])) {
-                        //check for each child-item with an escidoc-id if it has children of its own
-                       $childItems = $this->getChildren(($items[$i]['object_id']), $startRecord, $maxRecords, true);
+                if (isset($items[$i]['object_id'])) {
+                    //check for each child-item with an escidoc-id if it has children of its own
+                   $childItems = $this->getChildren(($items[$i]['object_id']), $startRecord, $maxRecords, true);
 
-                       //set hasChildren flag for items that have children
-                       if (count($childItems)>0) $items[$i]['hasChildren'] = true;
-                       else $items[$i]['hasChildren'] = false;
+                   //set hasChildren flag for items that have children
+                   if (count($childItems)>0) $items[$i]['hasChildren'] = true;
+                   else $items[$i]['hasChildren'] = false;
 
-                       if ($items[$i]['hasChildren'] && !$nestedCall) {
-                           //create link to list
-                           $items[$i]['link'] = $this->cObject->getTypolink_URL($GLOBALS['TSFE']->id,
-                                                                                array( 'pubmanimporter[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'list', )
-                                                                               );
-                       } else {
-                           $items[$i]['link'] = $this->cObject->getTypolink_URL($GLOBALS['TSFE']->id,
-                                                                                array( 'pubmanimporter[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'show', )
-                                                                               );
-                       }
-                    }
-
+                   if ($items[$i]['hasChildren'] && !$nestedCall) {
+                       //create link to list
+                       $items[$i]['link'] = $this->cObject->getTypolink_URL($GLOBALS['TSFE']->id,
+                                                                            array( 'pubmanimporter[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'list', )
+                                                                           );
+                   } else {
+                       $items[$i]['link'] = $this->cObject->getTypolink_URL($GLOBALS['TSFE']->id,
+                                                                            array( 'pubmanimporter[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'show', )
+                                                                           );
+                   }
                 }
+
             }
-
-            return $items;
         }
 
-        private function buildSearchString() {
+        return $items;
+    }
 
-        }
+    private function buildSearchString() {
 
-        public function loadList($objectId = null, $startRecord = 1, $maxRecords = 1000) {
+    }
 
+    public function loadList($objectId = null, $startRecord = 1, $maxRecords = 1000, $listAuthors = false) {
+        if($listAuthors) {
+            $items = $this->getAllItems();
+        } else {
             if (!empty($objectId)) {
                 $items = $this->getChildren($objectId,$startRecord, $maxRecords);
             } else {
                 $items = $this->getChildren($this->rootObjectId,$startRecord, $maxRecords);
             }
-
-            //return $this->pubman_options;
-            return $items;
         }
+        return $items;
+    }
+
+    public function getAuthors() {
+        $publications = $this->loadList(null, 1, 1000, true);
+        $authors = array();
+        foreach ($publications as $publication) {
+            foreach ($publication['creators'] as $creator) {
+                if ($creator['identifier']){
+                    $authors[] = $creator['identifier'];   
+                }
+            }
+        }
+        return array_unique($authors);
+    }
+
+    public function getXML() {
+        $tmp_pubman_options = $this->pubman_options;
+        $objectId = $this->rootObjectId;
+
+        $tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
+                                                urlencode($objectId) . '"+NOT+escidoc.objid%3D"' . urlencode($objectId) . '"))%20';
+       //$tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
+                                                urlencode($objectId) . '"))%20';
+        
+
+        $citation = 'ESCIDOC_XML_V13'; //AJP, JUS, APA
+
+        $query = array( 'cqlQuery' => $tmp_pubman_options['search_string'],
+                        'exportFormat' => $citation, //ESCIDOC_XML_V13
+                        'outputFormat' => 'escidoc_snippet',
+                        'sortKeys' => 'escidoc.publication.source.issue',
+                        'sortOrder' => 'ascending',
+                        'startRecord' => '1',
+                        'maximumRecords' => '1000');
+
+        $rest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Library\PMIRest', $tmp_pubman_options);
+        $data = $rest->getData($tmp_pubman_options['search_export_interface'], $query);
+
+        return $data;
+    }
 
 }

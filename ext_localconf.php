@@ -8,16 +8,10 @@ if (!defined('TYPO3_MODE')) {
 	'Publications',
 	array(
 		'Publication' => 'list, show',
-		'Author' => 'list, show',
-		'Organization' => 'list, show',
-
 	),
 	// non-cacheable actions
 	array(
-		'Publication' => '',
-		'Author' => '',
-		'Organization' => '',
-
+		'Publication' => 'list, show',
 	)
 );
 
@@ -25,16 +19,12 @@ if (!defined('TYPO3_MODE')) {
 	'LeipzigUniversityLibrary.' . $_EXTKEY,
 	'Authors',
 	array(
-		'Publication' => 'list, show',
 		'Author' => 'list, show',
 		'Organization' => 'list, show',
-
 	),
 	// non-cacheable actions
 	array(
-		'Publication' => '',
-		'Author' => '',
-		'Organization' => '',
-
+		'Author' => 'list, show',
+		'Organization' => 'list, show',
 	)
 );

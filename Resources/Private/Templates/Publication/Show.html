@@ -17,22 +17,9 @@ Otherwise your changes will be overwritten the next time you save the extension 
 
 <f:flashMessages renderMode="div" />
 
-
-<f:debug>{publication}</f:debug>
-
 <div  class="tx_pubmanimporter" >
 
-        <ul>
-            <li class="publication">
-                <a href="{publication.link}">{publication}</a>
-                <!--<f:link.action action="list" arguments="{objectId : publication.objectId}">List</f:link.action>-->
-            </li>
-
-        </ul>
-		<!--<tr>
-			<td><f:link.action action="edit" arguments="{publication : publication}">Edit</f:link.action></td>
-			<td><f:link.action action="delete" arguments="{publication : publication}">Delete</f:link.action></td>
-		</tr>-->
+                {publication}
 
 </div>
 

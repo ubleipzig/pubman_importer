@@ -1,48 +1,31 @@
-
 <f:layout name="Default" />
-
 This Template is responsible for creating a table of domain objects.
-
 If you modify this template, do not forget to change the overwrite settings
 in /Configuration/ExtensionBuilder/settings.yaml:
-  Resources:
-    Private:
-      Templates:
-        List.html: keep
-
+Resources:
+Private:
+Templates:
+List.html: keep
 Otherwise your changes will be overwritten the next time you save the extension in the extension builder
 
 <f:section name="main">
-<h1>Listing for Publication</h1>
-
-<f:flashMessages renderMode="div" />
-
-<f:debug>{publications}</f:debug>
-<f:debug>{params}</f:debug>
-<f:debug>{sourceUrl}</f:debug>
-
-<div  class="tx_pubmanimporter" >
-
-    <f:for each="{publications}" as="publication">
-        <ul>
-            <li class="publication">
-                <f:if condition="{publication.hasChildren}">
-                    <a href="{publication.link}">
-                </f:if>
-                {publication.title}
-                <f:if condition="{publication.hasChildren}">
-                </a>
-                </f:if>
-                <a href="{publication.source_url}{publication.fulltextlink}" title="{publication.properties.mime-type}">{publication.properties.file-name}</a>
-            </li>
-
-        </ul>
-		<!--<tr>
-			<td><f:link.action action="edit" arguments="{publication : publication}">Edit</f:link.action></td>
-			<td><f:link.action action="delete" arguments="{publication : publication}">Delete</f:link.action></td>
-		</tr>-->
-    </f:for>
-</div>
-
-<f:link.action action="new">New Publication</f:link.action>
+    <h1>Publications</h1>
+    <f:flashMessages renderMode="div" />
+    <div  class="tx_pubmanimporter" >
+        <f:for each="{publications}" as="publication">
+            <ul>
+                <li class="publication">
+                    <f:if condition="{publication.hasChildren}">
+                        <a href="{publication.link}">
+                    </f:if>
+                    {publication.title}
+                    <f:if condition="{publication.hasChildren}">
+                    </a>
+                    </f:if>
+                    <a href="{publication.source_url}{publication.fulltextlink}" title="{publication.properties.mime-type}">{publication.properties.file-name}</a>
+                    <f:link.action action="show" arguments="{publication : publication.object_id}">SHOW</f:link.action>
+                </li>
+            </ul>
+        </f:for>
+    </div>
 </f:section>

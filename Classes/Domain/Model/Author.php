@@ -33,12 +33,12 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 class Author extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
-	 * publication
+	 * author
 	 *
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication>
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author>
 	 * @cascade remove
 	 */
-	protected $publication = NULL;
+	//protected $author = NULL;
 
 	/**
 	 * organization
@@ -65,77 +65,49 @@ class Author extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @return void
 	 */
 	protected function initStorageObjects() {
-		$this->publication = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+		//$this->author = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 		$this->organization = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 	}
 
 	/**
-	 * Adds a Publication
+	 * Adds a Author
 	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publication
+	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author $author
 	 * @return void
 	 */
-	public function addPublication(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publication) {
-		$this->publication->attach($publication);
-	}
+	//public function addAuthor(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author $author) {
+	//	$this->author->attach($author);
+	//}
 
 	/**
-	 * Removes a Publication
+	 * Removes a Author
 	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publicationToRemove The Publication to be removed
+	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author $authorToRemove The Author to be removed
 	 * @return void
 	 */
-	public function removePublication(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publicationToRemove) {
-		$this->publication->detach($publicationToRemove);
-	}
+	//public function removeAuthor(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author $authorToRemove) {
+	//	$this->author->detach($authorToRemove);
+	//}
 
 	/**
-	 * Returns the publication
+	 * Returns the author
 	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication> $publication
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author> $author
 	 */
-	public function getPublication() {
-		return $this->publication;
-	}
+	//public function getAuthor() {
+	//	return $this->author;
+	//}
 
 	/**
-	 * Sets the publication
+	 * Sets the author
 	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication> $publication
+	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author> $author
 	 * @return void
 	 */
-	public function setPublication(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $publication) {
-		$this->publication = $publication;
-	}
+	//public function setAuthor(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $author) {
+	//	$this->author = $author;
+	//}
 
-	/**
-	 * Adds a Organization
-	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization $organization
-	 * @return void
-	 */
-	public function addOrganization(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization $organization) {
-		$this->organization->attach($organization);
-	}
-
-	/**
-	 * Removes a Organization
-	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization $organizationToRemove The Organization to be removed
-	 * @return void
-	 */
-	public function removeOrganization(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization $organizationToRemove) {
-		$this->organization->detach($organizationToRemove);
-	}
-
-	/**
-	 * Returns the organization
-	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization> $organization
-	 */
-	public function getOrganization() {
-		return $this->organization;
-	}
 
 	/**
 	 * Sets the organization

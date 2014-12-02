@@ -46,18 +46,53 @@ class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 	 * @return void
 	 */
 	public function listAction() {
-		$authors = $this->authorRepository->findAll();
+
+        $authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository');
+
+        $authorIdentifiers = $authRepo->loadList();
+        $authors = array();
+        foreach($authorIdentifiers as $authorIdentifier){
+        	$author = $authRepo->getAuthorDetails($authorIdentifier);
+        	$authors[] = $author;
+        }
+
+        // sort array by surname
+        $family_name = array();
+		foreach ($authors as $key => $row)
+		{
+		    $family_name[$key] = $row['family_name'];
+		}
+		array_multisort($family_name, SORT_ASC, $authors);
+
+		// assign to view
 		$this->view->assign('authors', $authors);
 	}
 
 	/**
 	 * action show
 	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author $author
 	 * @return void
 	 */
-	public function showAction(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author $author) {
-		$this->view->assign('author', $author);
+	public function showAction() {
+		$authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository');
+
+		$params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_pubmanimporter_authors');
+
+
+		$author = $params['author'];
+		$link = $author['link'];
+		$family_name = $author['family_name'];
+
+		$publications = $authRepo->getPublications($family_name);
+
+        $this->view->assign('author', $author);
+        $this->view->assign('family_name', $author['family_name']);
+        $this->view->assign('name', $author['name']);
+        $this->view->assign('given_name', $author['given_name']);
+        $this->view->assign('degree', $author['degree']);
+        $this->view->assign('link', $link);
+        $this->view->assign('publications', $publications);
+
 	}
 
 }
