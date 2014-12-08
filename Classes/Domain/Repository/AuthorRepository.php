@@ -32,9 +32,10 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Repository;
 class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
     private $cObject;
-
-    public function __construct() {
+    
+    public function __construct($settings = NULL) {
         $this->cObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
+        $this->settings = $settings;
     }
 
     private function parseXML($data) { 
@@ -101,15 +102,15 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * @return array $publications
      */
     public function getPublications($identifier) {
-        $source_url = 'http://141.39.229.2';
-        $search_export_interface = '/search/SearchAndExport?';
-        $search_options          = 'exportFormat=ESCIDOC_XML_V13&outputFormat=pdf&sortKeys=_relevance_&sortOrder=descending&startRecord=1&maximumRecords=50&cqlQuery=escidoc.publication.creator.person.family-name%3D';
+        $source_url                 = $this->settings['source_url'];
+        $search_export_interface    = $this->settings['search_export_interface'];
+        $search_options             = $this->settings['search_options'];
 
-        $publications = [];
-        $search_url = $source_url.$search_export_interface.$search_options.$identifier;
-        $data = file_get_contents($search_url);
-        $xml = simplexml_load_string($data);
-        $titleXPath = "/escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records[1]/escidocMetadataRecords:md-record[1]/publication:publication[1]/*[namespace-uri()='http://purl.org/dc/elements/1.1/' and local-name()='title'][1]";
+        $publications               = [];
+        $search_url                 = $source_url.$search_export_interface.$search_options.$identifier;
+        $data                       = file_get_contents($search_url);
+        $xml                        = simplexml_load_string($data);
+        $titleXPath                 = $this->settings['titleXPath'];
         foreach( $xml -> xpath($titleXPath) as $child){
             $publications[]=(string)$child;
         }
@@ -118,8 +119,8 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     public function loadList() {
-        $pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository');
-        $authors = $pubRepo->getAuthors();
+        $pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository', $this->settings);
+        $authors = $pubRepo->getAuthors($this->settings);
         return $authors;
     }
 

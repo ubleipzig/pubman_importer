@@ -49,7 +49,7 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 
             $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('pubmanimporter');
 
-            $pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository');
+            $pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository', $this->settings);
 
             if (!empty($params['objectId'])) {
                 $publications = $pubRepo->loadList($params['objectId']);

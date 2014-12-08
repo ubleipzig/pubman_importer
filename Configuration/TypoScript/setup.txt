@@ -1,5 +1,37 @@
 
 plugin.tx_pubmanimporter {
+	settings {
+		# PMIRest
+		host_name   = 141.39.229.2.1
+		port_number = 80
+		
+		# General
+		source_url = http://141.39.229.2
+
+		# AuthorRepo
+		search_export_interface = /search/SearchAndExport?
+		search_options          = exportFormat=ESCIDOC_XML_V13&outputFormat=pdf&sortKeys=_relevance_&sortOrder=descending&startRecord=1&maximumRecords=50&cqlQuery=escidoc.publication.creator.person.family-name%3D
+		titleXPath              = /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records[1]/escidocMetadataRecords:md-record[1]/publication:publication[1]/*[namespace-uri()='http://purl.org/dc/elements/1.1/' and local-name()='title'][1]
+		
+		# PublicationRepo
+		root_object_id                      = ubl:14001
+		item_view                           = /pubman/item
+		publication_search_export_interface = /search/SearchAndExport?cqlQuery=
+		search_string                       = escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"ubl%3A14001"+NOT+escidoc.objid%3D"ubl%3A14001"))%20
+		search_string_all_items             = escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20(escidoc.context.objid=%22ubl%3A9001%22)%20AND%20(escidoc.publication.type=%22http%3A//purl.org/escidoc/metadata/ves/publication%5C-types/article%22)%20OR%20(escidoc.publication.type=%22http%3A//purl.org/escidoc/metadata/ves/publication%5C-types/issue%22)%20
+		search_string_children {
+			0 = escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"
+			1 = "+NOT+escidoc.objid%3D"
+			2 = "))%20
+		}
+		fulltext_option_without             = 1
+		fulltext_option_nonpublic           = 1
+		                                      #AJP, JUS, APA
+		citation_format                     = ESCIDOC_XML_V13
+		output_format                       = escidoc_snippet
+		sort_keys                           = escidoc.publication.source.issue
+		sort_order                          = ascending
+	}
 	view {
 		templateRootPath = {$plugin.tx_pubmanimporter.view.templateRootPath}
 		partialRootPath = {$plugin.tx_pubmanimporter.view.partialRootPath}

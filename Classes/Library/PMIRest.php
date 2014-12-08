@@ -109,7 +109,6 @@ class PMIRest {
         $xml = \DOMDocument::loadXML($data);
 
         $posts = array();
-
         $escidocItems = $xml->getElementsByTagNameNS($xml->lookupNamespaceURI('escidocItem'), 'item');
 
         if ($escidocItems->length)
@@ -530,11 +529,11 @@ class PMIRest {
         $internal_managed = ' and escidoc.component.content.storage="internal-managed"';
         $visibility_public = ' and escidoc.component.visibility="public"';
         if ($this->options['fulltext_option_without']) {
-            PMILog::debug("Without fulltextes.");
+            PMILog::debug("Without fulltexts.");
             $internal_managed = "";
         }
         if ($this->options['fulltext_option_nonpublic']) {
-            PMILog::debug("Non public fulltextes.");
+            PMILog::debug("Non public fulltexts.");
             $visibility_public = "";
         }
         $query .= $internal_managed . $visibility_public;

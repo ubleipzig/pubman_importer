@@ -47,7 +47,7 @@ class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 	 */
 	public function listAction() {
 
-        $authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository');
+        $authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
 
         $authorIdentifiers = $authRepo->loadList();
         $authors = array();
@@ -74,7 +74,7 @@ class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 	 * @return void
 	 */
 	public function showAction() {
-		$authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository');
+		$authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
 
 		$params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_pubmanimporter_authors');
 
