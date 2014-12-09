@@ -51,9 +51,29 @@ class Author extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	/**
 	 * __construct
 	 */
-	public function __construct() {
+	public function __construct($familyName, $settings = NULL) {
 		//Do not remove the next line: It would break the functionality
 		$this->initStorageObjects();
+
+		$this->settings = $settings;
+		$this->familyName = $familyName;
+	}
+
+	public function getAuthors(){
+		$authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
+		$authorIdentifiers = $authRepo->loadList();
+		$authors = array();
+		foreach($authorIdentifiers as $authorIdentifier){
+			$author = $authRepo->getAuthorDetails($authorIdentifier);
+			$authors[] = $author;
+		}
+		return $authors;
+	}
+
+	public function getPublications() {
+		$authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
+
+		return $authRepo->getPublications($this->familyName);
 	}
 
 	/**

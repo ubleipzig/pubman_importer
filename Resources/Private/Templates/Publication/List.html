@@ -9,7 +9,11 @@ List.html: keep
 Otherwise your changes will be overwritten the next time you save the extension in the extension builder
 
 <f:section name="main">
-    <h1>Publications</h1>
+    <h1>Publications
+        <f:if condition="{publicationTitle}">
+            in "{publicationTitle}"
+        </f:if>
+    </h1>
     <f:flashMessages renderMode="div" />
     <div  class="tx_pubmanimporter" >
         <f:for each="{publications}" as="publication">

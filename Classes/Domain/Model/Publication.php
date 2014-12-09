@@ -59,9 +59,44 @@ class Publication extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	/**
 	 * __construct
 	 */
-	public function __construct() {
+	public function __construct($identifier, $settings = NULL) {
 		//Do not remove the next line: It would break the functionality
 		$this->initStorageObjects();
+
+		$this->settings = $settings;
+		$this->identifier = $identifier;
+	}
+
+	public function getPublications($objectId = NULL) {
+		$pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository', $this->settings);
+		$publications = $pubRepo->loadList($objectId);
+		return $publications;
+	}
+
+	public function getPublication() {
+		$pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository', $this->settings);
+		$publication = $pubRepo->getPublication($this->identifier);
+
+		return $publication;
+	}
+
+	public function getIdentifier() {
+		return $this->identifier;
+	}
+
+	public function getAuthors() {
+		// noch nicht fertig
+		$pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository', $this->settings);
+		$authors = $pubRepo->getAuthorsForRecord($this->identifier);
+
+		return $authors;
+	}
+
+	public function getTitle() {
+		$pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository', $this->settings);
+		$title = $pubRepo->getTitleForRecord($this->identifier);
+
+		return $title;
 	}
 
 	/**
@@ -98,11 +133,6 @@ class Publication extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		$this->component->detach($componentToRemove);
 	}
 
-	/**
-	 * Returns the component
-	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component> $component
-	 */
 	public function getComponent() {
 		return $this->component;
 	}
@@ -174,15 +204,6 @@ class Publication extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function removeAuthor(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author $authorToRemove) {
 		$this->author->detach($authorToRemove);
-	}
-
-	/**
-	 * Returns the author
-	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author> $author
-	 */
-	public function getAuthor() {
-		return $this->author;
 	}
 
 	/**

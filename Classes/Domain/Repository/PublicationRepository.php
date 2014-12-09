@@ -152,6 +152,7 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     return $items;
 }
 
+// get all authors
 public function getAuthors() {
     $publications = $this->loadList(null, 1, 1000, true);
     $authors = array();
@@ -163,6 +164,36 @@ public function getAuthors() {
         }
     }
     return array_unique($authors);
+}
+
+public function getAuthorsForRecord($id) {
+    $publications = $this->loadList(null, 1, 1000, true);
+    foreach ($publications as $publication) {
+        if ($publication['object_id'] == $id){
+            return $publication['creators'];
+        }
+    }
+    return [];
+}
+
+public function getTitleForRecord($id) {
+    $publications = $this->loadList(null, 1, 1000, true);
+    foreach ($publications as $publication) {
+        if ($publication['object_id'] == $id){
+            return $publication['escidoc_title'];
+        }
+    }
+    return "";
+}
+
+public function getPublication($id) {
+    $publications = $this->loadList(null, 1, 1000, true);
+    foreach ($publications as $publication) {
+        if ($publication['object_id'] == $id){
+            return $publication;
+        }
+    }
+    return [];
 }
 
 public function getXML() {

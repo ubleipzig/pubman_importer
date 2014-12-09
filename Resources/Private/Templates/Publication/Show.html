@@ -5,23 +5,29 @@ This Template is responsible for creating a table of domain objects.
 
 If you modify this template, do not forget to change the overwrite settings
 in /Configuration/ExtensionBuilder/settings.yaml:
-  Resources:
-    Private:
-      Templates:
-        List.html: keep
+Resources:
+Private:
+Templates:
+List.html: keep
 
 Otherwise your changes will be overwritten the next time you save the extension in the extension builder
 
 <f:section name="main">
-<h1>Single view for Publication</h1>
-
+<h1>Single view for Publication {identifier}</h1>
 <f:flashMessages renderMode="div" />
 
 <div  class="tx_pubmanimporter" >
-
-                {publication}
+	<h2>Title</h2>
+	{title}
+	
+	<h2>Authors</h2>
+	<ul>
+		<f:for each="{authors}" as="author">
+			<li><a href="{author.identifier}">{author.family-name}, {author.given-name}</a></li>
+		</f:for>
+	</ul>
 
 </div>
 
-<f:link.action action="new">New Publication</f:link.action>
+<f:link.action action="list">Back to List</f:link.action>
 </f:section>

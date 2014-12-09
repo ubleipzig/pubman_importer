@@ -46,20 +46,20 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 * @return void
 	 */
 	public function listAction() {
+		$params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('pubmanimporter');
+		$publication = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication', $params['objectId'], $this->settings);
 
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('pubmanimporter');
+		if (!empty($params['objectId'])) {
+			$publicationTitle = $publication->getTitle();
+			$publications 	  = $publication->getPublications($params['objectId']);
+		} else {
+			$publications = $publication->getPublications();
+		}
 
-            $pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository', $this->settings);
+		$mimeType = $params['properties']['mime-type'];
 
-            if (!empty($params['objectId'])) {
-                $publications = $pubRepo->loadList($params['objectId']);
-            } else {
-                $publications = $pubRepo->loadList();
-            }
-
-            $mimeType = $params['properties']['mime-type'];
-
-            $this->view->assign('publications', $publications);
+		$this->view->assign('publications', $publications);
+		$this->view->assign('publicationTitle', $publicationTitle);
 	}
 
 
@@ -70,15 +70,21 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 *
 	 * @return void
 	 */
-    public function showAction() {
-        $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_pubmanimporter_publications');
+     public function showAction() {
+     	$params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_pubmanimporter_publications');
+
+     	$publication = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication', $params['publication'], $this->settings);
+
+     	$identifier = $publication->getIdentifier();
+     	$authors 	= $publication->getAuthors();
+     	$title 		= $publication->getTitle();
+
+     	$this->view->assign('identifier', $identifier);
+     	$this->view->assign('authors', $authors);
+     	$this->view->assign('title', $title);
+     	$this->view->assign('publication', $publication->getPublication());
 
 
-        $publication = $params['publication'];
+     }
 
-        $this->view->assign('publication', $publication);
-
-
-    }
-
-}
+ }
