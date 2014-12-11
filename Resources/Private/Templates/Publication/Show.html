@@ -18,15 +18,17 @@ Otherwise your changes will be overwritten the next time you save the extension 
 
 <div  class="tx_pubmanimporter" >
 	<h2>Title</h2>
-	{title}
-	
+	{title}	
 	<h2>Authors</h2>
 	<ul>
-		<f:for each="{authors}" as="author">
-			<li><a href="{author.identifier}">{author.family-name}, {author.given-name}</a></li>
+		<f:for each="{authors}" as="author" iteration="authorIterator">
+			<li class="author {authorIterator.cycle}{f:if(condition: authorIterator.isEven, then: ' Even')}{f:if(condition: authorIterator.isOdd, then: ' Odd')}{f:if(condition: authorIterator.isFirst, then: ' First')}{f:if(condition: authorIterator.isLast, then: ' Last')}">
+				<a href="{author.identifier}" class="author">
+					<span class="author_name family_name">{author.family-name}</span>, <span class="author_name family_name">{author.given-name}</span>
+				</a>
+			</li>
 		</f:for>
 	</ul>
-
 </div>
 
 <f:link.action action="list">Back to List</f:link.action>
