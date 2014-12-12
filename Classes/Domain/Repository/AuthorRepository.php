@@ -106,16 +106,21 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
         $search_export_interface    = $this->settings['search_export_interface'];
         $search_options             = $this->settings['search_options'];
 
-        $publications               = [];
+        $publicationIds             = [];
+        $publicationTitles          = [];
         $search_url                 = $source_url.$search_export_interface.$search_options.$identifier;
         $data                       = file_get_contents($search_url);
         $xml                        = simplexml_load_string($data);
+        $objidXPath                 = $this->settings['objidXPath'];
         $titleXPath                 = $this->settings['titleXPath'];
+        foreach( $xml -> xpath($objidXPath) as $child){
+            $publicationIds[]=(string)$child;
+        }
         foreach( $xml -> xpath($titleXPath) as $child){
-            $publications[]=(string)$child;
+            $publicationTitles[]=(string)$child;
         }
 
-        return $publications;
+        return array_combine($publicationIds, $publicationTitles);
     }
 
     public function loadList() {

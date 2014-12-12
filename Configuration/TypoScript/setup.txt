@@ -11,6 +11,7 @@ plugin.tx_pubmanimporter {
 		# AuthorRepo
 		search_export_interface = /search/SearchAndExport?
 		search_options          = exportFormat=ESCIDOC_XML_V13&outputFormat=pdf&sortKeys=_relevance_&sortOrder=descending&startRecord=1&maximumRecords=50&cqlQuery=escidoc.publication.creator.person.family-name%3D
+		objidXPath              = /escidocItemList:item-list/escidocItem:item/@objid
 		titleXPath              = /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records[1]/escidocMetadataRecords:md-record[1]/publication:publication[1]/*[namespace-uri()='http://purl.org/dc/elements/1.1/' and local-name()='title'][1]
 		
 		# PublicationRepo
