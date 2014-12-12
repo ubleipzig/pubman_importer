@@ -84,6 +84,8 @@ class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 		$this->view->assign('degree', $author['degree']);
 		$this->view->assign('link', $link);
 		$this->view->assign('publications', $publications);
+		$this->view->assign('source_url', $this->settings{'source_url'});
+		$this->view->assign('item_view', $this->settings{'item_view'});
 
 	}
 

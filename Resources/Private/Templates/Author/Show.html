@@ -19,7 +19,10 @@ Otherwise your changes will be overwritten the next time you save the extension 
 	<ul class="publications">
 	<f:for each="{publications}" as="publication" iteration="publicationIterator" key="objid">
 			<li class="publication {publicationIterator.cycle}{f:if(condition: publicationIterator.isEven, then: ' Even')}{f:if(condition: publicationIterator.isOdd, then: ' Odd')}{f:if(condition: publicationIterator.isFirst, then: ' First')}{f:if(condition: publicationIterator.isLast, then: ' Last')}">
-				<span class="publication_id">{objid}</span>: <span class="publication_title">{publication}</span>
+				<a href="{source_url}{item_view}/{objid}">
+					<span class="publication_id">{objid}</span>: 
+					<span class="publication_title">{publication}</span>
+				</a>
 			</li>
 		</f:for>
 	</ul>
