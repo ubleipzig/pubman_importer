@@ -128,15 +128,4 @@ class Author extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	//	$this->author = $author;
 	//}
 
-
-	/**
-	 * Sets the organization
-	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization> $organization
-	 * @return void
-	 */
-	public function setOrganization(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $organization) {
-		$this->organization = $organization;
-	}
-
 }

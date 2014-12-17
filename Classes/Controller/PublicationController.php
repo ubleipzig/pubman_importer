@@ -31,7 +31,7 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Controller;
  * PublicationController
  */
 class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
-
+	
 	/**
 	 * publicationRepository
 	 *
@@ -62,7 +62,6 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 		$this->view->assign('publicationTitle', $publicationTitle);
 	}
 
-
 	// @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication $publication
 
      /**
@@ -83,8 +82,5 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
      	$this->view->assign('authors', $authors);
      	$this->view->assign('title', $title);
      	$this->view->assign('publication', $publication->getPublication());
-
-
      }
-
  }

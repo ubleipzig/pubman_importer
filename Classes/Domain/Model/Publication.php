@@ -41,14 +41,6 @@ class Publication extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $component = NULL;
 
 	/**
-	 * organization
-	 *
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization>
-	 * @cascade remove
-	 */
-	protected $organization = NULL;
-
-	/**
 	 * author
 	 *
 	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author>
@@ -95,7 +87,6 @@ class Publication extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	public function getTitle() {
 		$pubRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\PublicationRepository', $this->settings);
 		$title = $pubRepo->getTitleForRecord($this->identifier);
-
 		return $title;
 	}
 
@@ -123,68 +114,6 @@ class Publication extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		$this->component->attach($component);
 	}
 
-	/**
-	 * Removes a Component
-	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component $componentToRemove The Component to be removed
-	 * @return void
-	 */
-	public function removeComponent(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component $componentToRemove) {
-		$this->component->detach($componentToRemove);
-	}
-
-	public function getComponent() {
-		return $this->component;
-	}
-
-	/**
-	 * Sets the component
-	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component> $component
-	 * @return void
-	 */
-	public function setComponent(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $component) {
-		$this->component = $component;
-	}
-
-	/**
-	 * Adds a Organization
-	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization $organization
-	 * @return void
-	 */
-	public function addOrganization(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization $organization) {
-		$this->organization->attach($organization);
-	}
-
-	/**
-	 * Removes a Organization
-	 *
-	 * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization $organizationToRemove The Organization to be removed
-	 * @return void
-	 */
-	public function removeOrganization(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization $organizationToRemove) {
-		$this->organization->detach($organizationToRemove);
-	}
-
-	/**
-	 * Returns the organization
-	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization> $organization
-	 */
-	public function getOrganization() {
-		return $this->organization;
-	}
-
-	/**
-	 * Sets the organization
-	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Organization> $organization
-	 * @return void
-	 */
-	public function setOrganization(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $organization) {
-		$this->organization = $organization;
-	}
 
 	/**
 	 * Adds a Author

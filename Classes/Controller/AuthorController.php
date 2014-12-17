@@ -66,13 +66,10 @@ class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 	 * @return void
 	 */
 	public function showAction() {
-		
 		$params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_pubmanimporter_authors');
-
 		$author = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author', $params['author']['family_name'], $this->settings);
 
 		$publications = $author->getPublications();
-
 		$author 	 = $params['author'];
 		$link 		 = $author['link'];
 		$family_name = $author['family_name'];

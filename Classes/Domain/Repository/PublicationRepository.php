@@ -31,19 +31,19 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Repository;
  * The repository for Publications
  */
 class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
-
     private $cObject;
 
     public function __construct($settings = NULL) {
         $this->settings = $settings;
         $this->cObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
         $this->rootObjectId = $this->settings['root_object_id'];
+
         $this->pubman_options = array (
             'source_url'                => $settings['source_url'],
             'item_view'                 => $this->settings['item_view'],
             'search_export_interface'   => $this->settings['publication_search_export_interface'],
-         //Artikel zu Heft //=> 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"ubl%3A14003"+NOT+escidoc.objid%3D"ubl%3A14003"))%20',
-         //Hefte zu Zeitschrift
+            //Artikel zu Heft //=> 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"ubl%3A14003"+NOT+escidoc.objid%3D"ubl%3A14003"))%20',
+            //Hefte zu Zeitschrift
             'search_string'             => $this->settings['search_string'],
             'fulltext_option_without'   => intval($this->settings['fulltext_option_without']),
             'fulltext_option_nonpublic' => intval($this->settings['fulltext_option_nonpubic']),
@@ -52,9 +52,7 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
     private function getAllItems() {
         $tmp_pubman_options = $this->pubman_options;
-
         $tmp_pubman_options['search_string'] = $this->settings['search_string_all_items'];
-
         $citation = $this->settings['citation_format'];
 
         $query = array( 'cqlQuery'       => $tmp_pubman_options['search_string'],
@@ -66,9 +64,7 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
                         'maximumRecords' => $maxRecords);
 
         $rest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Library\PMIRest', $tmp_pubman_options);
-
         $data = $rest->getData($tmp_pubman_options['search_export_interface'], $query);
-
         $items = $rest->parseXML($data);
 
         return $items;
@@ -78,12 +74,10 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
     private function getChildren($objectId, $startRecord, $maxRecords, $nestedCall = false) {
         $tmp_pubman_options = $this->pubman_options;
-
         $search_string_tmp  = $this->settings['search_string_children'];
 
         //$tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
         //                                        urlencode($objectId) . '"+NOT+escidoc.objid%3D"' . urlencode($objectId) . '"))%20';
-        
         $tmp_pubman_options['search_string'] = $search_string_tmp[0] . urlencode($objectId) . $search_string_tmp[1] . urlencode($objectId) . $search_string_tmp[2];
        //$tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' .
                                                // urlencode($objectId) . '"))%20';
@@ -100,7 +94,6 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
         $rest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Library\PMIRest', $tmp_pubman_options);
         $data = $rest->getData($tmp_pubman_options['search_export_interface'], $query);
-
         $items = $rest->parseXML($data, "pubRepo");
 
         if (count($items) > 0 && !$nestedCall) { //use nestedCall to traverse only one level down
@@ -199,17 +192,13 @@ public function getPublication($id) {
 public function getXML() {
     $tmp_pubman_options = $this->pubman_options;
     $objectId = $this->rootObjectId;
-
     $search_string_tmp  = $this->settings['search_string_children'];
-
     $tmp_pubman_options['search_string'] = $search_string_tmp[0] .
     urlencode($objectId) . $search_string_tmp[1] . urlencode($objectId) . $search_string_tmp[2];
-       //$tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' . urlencode($objectId) . '"))%20';
+    //$tmp_pubman_options['search_string'] = 'escidoc.objecttype=%22item%22%20and%20escidoc.content-model.objid=%22ubl%3A5001%22%20AND%20((escidoc.any-identifier%3D"' . urlencode($objectId) . '"))%20';
+    $citation = 'ESCIDOC_XML_V13'; //AJP, JUS, APA
 
-
-        $citation = 'ESCIDOC_XML_V13'; //AJP, JUS, APA
-
-        $query = array( 'cqlQuery' => $tmp_pubman_options['search_string'],
+    $query = array( 'cqlQuery' => $tmp_pubman_options['search_string'],
                         'exportFormat' => $citation, //ESCIDOC_XML_V13
                         'outputFormat' => 'escidoc_snippet',
                         'sortKeys' => 'escidoc.publication.source.issue',
@@ -217,10 +206,10 @@ public function getXML() {
                         'startRecord' => '1',
                         'maximumRecords' => '1000');
 
-        $rest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Library\PMIRest', $tmp_pubman_options);
-        $data = $rest->getData($tmp_pubman_options['search_export_interface'], $query);
+    $rest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Library\PMIRest', $tmp_pubman_options);
+    $data = $rest->getData($tmp_pubman_options['search_export_interface'], $query);
 
-        return $data;
+    return $data;
     }
 
 }

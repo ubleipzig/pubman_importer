@@ -30,7 +30,6 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Repository;
  * The repository for Authors
  */
 class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
-
     private $cObject;
     
     public function __construct($settings = NULL) {
@@ -39,12 +38,12 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
 
     private function parseXML($data) { 
+        $authors = array();
         if (!$data) {
-            return '';
+            return $authors;
         }
         $xml = \DOMDocument::loadXML($data);
         $xpath = new \DOMXPath($xml);
-        $authors = array();
         $nodes = $xpath->query('//rdf:Description');
         for ($i = 0; $i < $nodes->length; $i++) {
             $node = $nodes->item($i);
@@ -78,22 +77,17 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
             'link' => ''
             );
         if($node) {
-            
             $familyNameNode = $node->getElementsByTagNameNS($node->lookupNamespaceURI('foaf'),'family_name')->item(0);
             $author['family_name'] = $familyNameNode->textContent;
-
             $nameNode = $node->getElementsByTagNameNS($node->lookupNamespaceURI('dc'),'title')->item(0);
             $author['name'] = $nameNode->textContent;
-
             $givenNameNode = $node->getElementsByTagNameNS($node->lookupNamespaceURI('foaf'),'givenname')->item(0);
             $author['given_name'] = $givenNameNode->textContent;
-
             $degreeNode = $node->getElementsByTagNameNS($node->lookupNamespaceURI('escidoc'),'degree')->item(0);
             $author['degree'] = $degreeNode->textContent;
             $author['link'] = $node->getAttribute('rdf:about');
         }
         return $author;
-
     }
 
     /**
@@ -105,9 +99,8 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
         $source_url                 = $this->settings['source_url'];
         $search_export_interface    = $this->settings['search_export_interface'];
         $search_options             = $this->settings['search_options'];
-
-        $publicationIds             = [];
-        $publicationTitles          = [];
+        $publicationIds             = array();
+        $publicationTitles          = array();
         $search_url                 = $source_url.$search_export_interface.$search_options.$identifier;
         $data                       = file_get_contents($search_url);
         $xml                        = simplexml_load_string($data);
@@ -119,7 +112,6 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
         foreach( $xml -> xpath($titleXPath) as $child){
             $publicationTitles[]=(string)$child;
         }
-
         return array_combine($publicationIds, $publicationTitles);
     }
 
@@ -128,6 +120,4 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
         $authors = $pubRepo->getAuthors($this->settings);
         return $authors;
     }
-
-
 }
