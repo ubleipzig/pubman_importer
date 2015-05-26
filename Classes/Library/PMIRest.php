@@ -10,9 +10,6 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Library;
  */
 class PMIRest {
 
-    private $host_name = '141.39.229.2';
-    private $port_number = 80;
-
     /*
      * Possible options:
      *      [source_url] - Base-URL, e.g. http://pubman.mpdl.mpg.de
@@ -64,12 +61,12 @@ class PMIRest {
 
         $query['cqlQuery'] = $this->extendQuery($query['cqlQuery']);
         PMILog::push("PubMan Query:\"" . $this->query2string($query) . "\"");
-        $socket = fsockopen($this->host_name, $this->port_number, $errno, $errstr);
+        $socket = fsockopen($this->options['host_name'], $this->options['port_number'], $errno, $errstr);
         if (!$socket) {
-            PMILog::push("Error ($errno): $errstr while connecting to $this->host_name on port $this->port_number");
+            PMILog::push("Error ($errno): $errstr while connecting to $this->options['host_name'] on port $this->options['port_number']");
         } else {
             $out = "GET " . $uri . $this->query2string($query) . " HTTP/1.1\r\n";
-            $out .= "Host: " . $this->host_name . "\r\n";
+            $out .= "Host: " . $this->options['host_name'] . "\r\n";
             $out .= "Connection: Close\r\n\r\n";
 
             fwrite($socket, $out);
@@ -177,7 +174,7 @@ class PMIRest {
             */
 
             $content = "";
-	    $extFulltext = "";
+	        $extFulltext = "";
             $license = "";
             $properties = array();
             $storage = "";
@@ -193,7 +190,7 @@ class PMIRest {
                     }
                     // extract full text links
                     $contentNode = $this->getNodeByPath($componentNode, array('escidocComponents:content'));
-                    If ($contentNode) {
+                    if ($contentNode) {
                         $storage = $this->getNodeAttr($contentNode, 'storage');
                         $href = $this->getNodeAttr($contentNode, 'href');
                         if ($storage == "internal-managed") {
@@ -208,18 +205,18 @@ class PMIRest {
                             }
                         } else if ($storage == "external-url") {
                             // seems to be an external reference
-			    $externalFulltextLink = $href;
-			    if ($externalFulltextLink != '') {
-				if ($extFulltext != '') {
-					$extFulltext .= "||$externalFulltextLink";
-				} else {
-					$extFulltext = $externalFulltextLink;
-				}
-				PMILog::debug("Found external fulltext link: $externalFulltextLink");
-			    }
+                            $externalFulltextLink = $href;
+                            if ($externalFulltextLink != '') {
+                                if ($extFulltext != '') {
+                                    $extFulltext .= "||$externalFulltextLink";
+                                } else {
+                                    $extFulltext = $externalFulltextLink;
+                                }
+                                PMILog::debug("Found external fulltext link: $externalFulltextLink");
+                            }
                         } else {
-				// seems to be different stuff
-			}
+				            // seems to be different stuff
+			            }
                     }
                     // search for cc licenses. The first one we find, will be used
                     if ($license == "") {
@@ -316,7 +313,7 @@ class PMIRest {
             $post['escidoc_title'] = $this->getNodeValueByPath($publication, array('dc:title'));
             $post['properties'] = $properties;
             $post['fulltextlink'] = $content;
-	    $post['extfulltextlink'] = $extFulltext;
+	        $post['extfulltextlink'] = $extFulltext;
             $post['storage'] = $storage;
             // get a date that can be used for the wp post
             $dateEventEnd = $this->getNodeValueByPath($publication, array('event:event', 'eterms:end-date'));
