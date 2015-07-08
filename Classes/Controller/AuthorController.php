@@ -1,6 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Controller;
-
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
  *
@@ -30,29 +30,22 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Controller;
 /**
  * AuthorController
  */
-class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
-
-	/**
-	 * authorRepository
-	 *
-	 * @var \LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository
-	 * @inject
-	 */
-	protected $authorRepository = NULL;
+class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
+{
 
 	/**
 	 * action list
 	 *
 	 * @return void
 	 */
-	public function listAction() {
-		$author = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author', NULL, $this->settings);
+	public function listAction()
+	{
+		$author = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author', NULL, $this->settings);
 		$authors = $author->getAuthors();
 
-        // sort array by surname
+		// sort array by surname
 		$family_name = array();
-		foreach ($authors as $key => $row)
-		{
+		foreach ($authors as $key => $row) {
 			$family_name[$key] = $row['family_name'];
 		}
 		array_multisort($family_name, SORT_ASC, $authors);
@@ -65,25 +58,22 @@ class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 	 *
 	 * @return void
 	 */
-	public function showAction() {
-		$params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_pubmanimporter_authors');
-		$author = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author', $params['author']['family_name'], $this->settings);
+	public function showAction()
+	{
+		$params = GeneralUtility::_GET('tx_pubmanimporter_authors');
+		$author = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Author', $params['author']['family_name'], $this->settings);
 
 		$publications = $author->getPublications();
-		$author 	 = $params['author'];
-		$link 		 = $author['link'];
-		$family_name = $author['family_name'];
+		$author = $params['author'];
 
 		$this->view->assign('author', $author);
 		$this->view->assign('family_name', $author['family_name']);
 		$this->view->assign('name', $author['name']);
 		$this->view->assign('given_name', $author['given_name']);
 		$this->view->assign('degree', $author['degree']);
-		$this->view->assign('link', $link);
+		$this->view->assign('link', $author['link']);
 		$this->view->assign('publications', $publications);
 		$this->view->assign('source_url', $this->settings{'source_url'});
 		$this->view->assign('item_view', $this->settings{'item_view'});
-
 	}
-
 }

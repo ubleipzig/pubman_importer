@@ -1,6 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
-
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
  *
@@ -60,7 +60,7 @@ class Author extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	public function getAuthors(){
-		$authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
+		$authRepo = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
 		$authorIdentifiers = $authRepo->loadList();
 		$authors = array();
 		foreach($authorIdentifiers as $authorIdentifier){
@@ -71,7 +71,7 @@ class Author extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	public function getPublications() {
-		$authRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
+		$authRepo = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
 
 		return $authRepo->getPublications($this->familyName);
 	}

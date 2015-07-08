@@ -1,7 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Controller;
 
-
 /***************************************************************
  *
  *  Copyright notice
