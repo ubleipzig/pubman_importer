@@ -9,7 +9,7 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package pubman_import
  * @author
  */
-class PMIRest
+class PMIRest implements \TYPO3\CMS\Core\SingletonInterface
 {
 
 	/*

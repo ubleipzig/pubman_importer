@@ -45,7 +45,14 @@ class AuthorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
 
 		// sort array by surname
 		$family_name = array();
-		foreach ($authors as $key => $row) {
+		foreach ($authors as $key => &$row) {
+			if (!$row['family_name'] && $row['name']) {
+				$matches = [];
+				preg_match('/(?<family_name>\w+)\s*,\s*(?<given_name>\w)/', $row['name'], $matches);
+				$row['family_name'] = $matches['family_name'];
+				$row['given_name'] = $matches['given_name'];
+			}
+
 			$family_name[$key] = $row['family_name'];
 		}
 		array_multisort($family_name, SORT_ASC, $authors);
