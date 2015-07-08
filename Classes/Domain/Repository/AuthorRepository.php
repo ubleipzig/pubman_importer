@@ -101,7 +101,7 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 	 */
 	public function getPublications($identifier)
 	{
-		$source_url = $this->settings['source_url'];
+		$source_url = $this->settings['host'];
 		$search_export_interface = $this->settings['search_export_interface'];
 		$search_options = $this->settings['search_options'];
 		$publicationIds = array();

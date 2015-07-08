@@ -32,5 +32,4 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Repository;
  */
 class OrganizationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
-	
 }
