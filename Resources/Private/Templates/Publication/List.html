@@ -27,9 +27,13 @@ Otherwise your changes will be overwritten the next time you save the extension 
                     <f:if condition="{publication.hasChildren}">
                         </a>
                     </f:if>
-                    <a href="{publication.source_url}{publication.fulltextlink}" title="{publication.properties.mime-type}" class="publication_fulltext_link">
-                        {publication.properties.file-name}
-                    </a>
+                    <f:for each="{publication.fulltextlink}" as="fulltextlink">
+                        <f:if condition="{fulltextlink.mime-type} == 'application/pdf'">
+                            <a href="{publication.source_url}{fulltextlink.href}" title="{fulltextlink.mime-type}" class="publication_fulltext_link">
+                                {fulltextlink.file-name}
+                            </a>
+                        </f:if>
+                    </f:for>
                     <f:link.action action="show" arguments="{publication : publication.object_id}" class="publication_show_link">SHOW</f:link.action>
                 </li>
             </f:for>

@@ -163,8 +163,8 @@ class PMIRest implements \TYPO3\CMS\Core\SingletonInterface
 			 * escidocComponents:content xlink:type="simple" xlink:title="NI 95_96_Druck.pdf" xlink:href="/ir/item/ubl:14003/components/component/ubl:14002/content" storage="internal-managed"
 			 */
 
-			$content = "";
-			$extFulltext = "";
+			$content = [];
+			$extFulltext = [];
 			$license = "";
 			$properties = array();
 			$storage = "";
@@ -184,25 +184,23 @@ class PMIRest implements \TYPO3\CMS\Core\SingletonInterface
 						$storage = $this->getNodeAttr($contentNode, 'storage');
 						$href = $this->getNodeAttr($contentNode, 'href');
 						if ($storage == "internal-managed") {
-							$fulltextLink = $href;
-							if ($fulltextLink != "") {
-								if ($content != "") {
-									$content .= "||$fulltextLink";
-								} else {
-									$content = $fulltextLink;
-								}
-								PMILog::debug("Found fulltext link: $fulltextLink");
+							if ($href) {
+								$content[] = [
+									'href' => $href,
+									'mime-type' => $properties['mime-type'],
+									'file-name' => $properties['file-name']
+								];
+								PMILog::debug("Found fulltext link: $href");
 							}
 						} else if ($storage == "external-url") {
 							// seems to be an external reference
-							$externalFulltextLink = $href;
-							if ($externalFulltextLink != '') {
-								if ($extFulltext != '') {
-									$extFulltext .= "||$externalFulltextLink";
-								} else {
-									$extFulltext = $externalFulltextLink;
-								}
-								PMILog::debug("Found external fulltext link: $externalFulltextLink");
+							if ($href) {
+								$extFulltext[] = [
+									'href' => $href,
+									'mime-type' => $properties['mime-type'],
+									'file-name' => $properties['file-name']
+								];
+								PMILog::debug("Found external fulltext link: $href");
 							}
 						} else {
 							// seems to be different stuff
