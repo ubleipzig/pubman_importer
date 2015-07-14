@@ -2,35 +2,34 @@
 plugin.tx_pubmanimporter {
 	settings {
 		# PMIRest
-		host_name   = 141.39.229.2
-		port_number = 80
+		host = https://publishing.ub.uni-leipzig.de
 
 		# General
-		source_url = http://141.39.229.2
-        search_export_interface = /search/SearchAndExport?
-        content_model_id = ubl:5001
-        context_id = ubl:9001
+		source_url = https://publishing.ub.uni-leipzig.de
+		search_export_interface = /search/SearchAndExport?
+		content_model_id = escidoc:2001
+		context_id = ubl:10444
 
 		# AuthorRepo
-		search_options          = exportFormat=ESCIDOC_XML_V13&outputFormat=pdf&sortKeys=_relevance_&sortOrder=descending&startRecord=1&maximumRecords=50&cqlQuery=escidoc.publication.creator.person.family-name=
-		objidXPath              = /escidocItemList:item-list/escidocItem:item/@objid
-		titleXPath              = /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records[1]/escidocMetadataRecords:md-record[1]/publication:publication[1]/*[namespace-uri()='http://purl.org/dc/elements/1.1/' and local-name()='title'][1]
+		search_options = exportFormat=ESCIDOC_XML_V13&outputFormat=pdf&sortKeys=_relevance_&sortOrder=descending&startRecord=1&maximumRecords=50&cqlQuery=escidoc.publication.creator.person.family-name=
+		objidXPath = /escidocItemList:item-list/escidocItem:item/@objid
+		titleXPath = /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records[1]/escidocMetadataRecords:md-record[1]/publication:publication[1]/*[namespace-uri()='http://purl.org/dc/elements/1.1/' and local-name()='title'][1]
 
 		# PublicationRepo
-		root_object_id                      = ubl:14001
-		item_view                           = /pubman/item
+		root_object_id = ubl:10502
+		item_view = /pubman/item
 		publication_search_export_interface = /search/SearchAndExport?cqlQuery=
-		search_string                       = escidoc.objecttype="item" and escidoc.content-model.objid="%s" AND ((escidoc.any-identifier="%s" NOT escidoc.objid="%s"))
-		search_string_all_items             = escidoc.objecttype="item" and escidoc.content-model.objid="%s" AND (escidoc.context.objid="%s") AND (escidoc.publication.type="http://purl.org/escidoc/metadata/ves/publication\-types/article") OR (escidoc.publication.type="http://purl.org/escidoc/metadata/ves/publication\-types/issue")
-		search_string_children              = escidoc.objecttype="item" and escidoc.content-model.objid="%s" AND ((escidoc.any-identifier="%s" NOT escidoc.objid="%s"))
+		search_string = escidoc.objecttype="item" and escidoc.content-model.objid="%s" AND ((escidoc.any-identifier="%s" NOT escidoc.objid="%s"))
+		search_string_all_items = escidoc.objecttype="item" and escidoc.content-model.objid="%s" AND (escidoc.context.objid="%s") AND (escidoc.publication.type="http://purl.org/escidoc/metadata/ves/publication\-types/article") OR (escidoc.publication.type="http://purl.org/escidoc/metadata/ves/publication\-types/issue")
+		search_string_children = escidoc.objecttype="item" and escidoc.content-model.objid="%s" AND ((escidoc.any-identifier="%s" NOT escidoc.objid="%s"))
 
-		fulltext_option_without             = 1
-		fulltext_option_nonpublic           = 1
-		                                      #AJP, JUS, APA
-		citation_format                     = ESCIDOC_XML_V13
-		output_format                       = escidoc_snippet
-		sort_keys                           = escidoc.publication.source.issue
-		sort_order                          = ascending
+		fulltext_option_without = 1
+		fulltext_option_nonpublic = 1
+								#AJP, JUS, APA
+		citation_format = ESCIDOC_XML_V13
+		output_format = escidoc_snippet
+		sort_keys = escidoc.publication.source.issue
+		sort_order = ascending
 	}
 	view {
 		templateRootPath = {$plugin.tx_pubmanimporter.view.templateRootPath}
