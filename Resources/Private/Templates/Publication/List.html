@@ -30,13 +30,14 @@ Otherwise your changes will be overwritten the next time you save the extension 
                     <f:for each="{publication.fulltextlink}" as="fulltextlink">
                         <f:if condition="{fulltextlink.mime-type} == 'application/pdf'">
                             <a href="{publication.source_url}{fulltextlink.href}" title="{fulltextlink.mime-type}" class="publication_fulltext_link">
-                                {fulltextlink.file-name}
+                                PDF
                             </a>
                         </f:if>
                     </f:for>
-                    <f:link.action action="show" arguments="{publication : publication.object_id}" class="publication_show_link">SHOW</f:link.action>
+                    <f:link.action action="show" arguments="{publication : publication.object_id, parent : objectId}" class="publication_show_link">Details</f:link.action>
                 </li>
             </f:for>
         </ul>
+        <f:if condition="{objectId}"><f:link.action action="list" arguments="{objectId : parent}" class="publication_show_link">back</f:link.action></f:if>
     </div>
 </f:section>

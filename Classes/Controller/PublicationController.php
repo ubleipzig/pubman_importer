@@ -40,7 +40,7 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 */
 	public function listAction()
 	{
-		$params = GeneralUtility::_GET('pubmanimporter');
+		$params = GeneralUtility::_GET('tx_pubmanimporter_publications');
 		$publication = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Publication', $params['objectId'], $this->settings);
 
 		if (!empty($params['objectId'])) {
@@ -56,6 +56,8 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 		$this->view->assign('publications', $publications);
 		$this->view->assign('publicationTitle', $publicationTitle);
 		$this->view->assign('mimeType', $mimeType);
+		$this->view->assign('parent', $params['parent'] ? $params['parent'] : null);
+		$this->view->assign('objectId', $params['objectId'] ? $params['objectId'] : null);
 	}
 
 	/**
@@ -73,5 +75,6 @@ class PublicationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 		$this->view->assign('authors', $publication->getAuthors());
 		$this->view->assign('title', $publication->getTitle());
 		$this->view->assign('publication', $publication->getPublication());
+		$this->view->assign('parent', $params['parent'] ? $params['parent'] : null);
 	}
 }

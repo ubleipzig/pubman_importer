@@ -102,11 +102,11 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
                     if ($items[$i]['hasChildren'] && !$nestedCall) {
                         //create link to list
                         $items[$i]['link'] = $this->cObject->getTypolink_URL($GLOBALS['TSFE']->id,
-                            array( 'pubmanimporter[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'list', )
+                            array( 'tx_pubmanimporter_publications[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'list', )
                         );
                     } else {
                         $items[$i]['link'] = $this->cObject->getTypolink_URL($GLOBALS['TSFE']->id,
-                            array( 'pubmanimporter[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'show', )
+                            array( 'tx_pubmanimporter_publications[objectId]' => $items[$i]['object_id'],'tx_pubmanimporter_publications[action]' => 'show', )
                         );
                     }
                 }

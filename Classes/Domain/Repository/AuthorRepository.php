@@ -70,7 +70,7 @@ class AuthorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 	public function getAuthorDetails($identifier)
 	{
 		$data = file_get_contents($identifier . "?format=rdf");
-		$xml = \DOMDocument::loadXML($data);
+		$xml = @\DOMDocument::loadXML($data);
 		$xpath = new \DOMXPath($xml);
 		$node = $xpath->query('//rdf:Description')->item(0);
 		$author = array(

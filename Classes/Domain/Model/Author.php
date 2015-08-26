@@ -44,9 +44,11 @@ class Author extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		$authRepo = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\AuthorRepository', $this->settings);
 		$authorIdentifiers = $authRepo->loadList();
 		$authors = array();
-		foreach($authorIdentifiers as $authorIdentifier){
-			$author = $authRepo->getAuthorDetails($authorIdentifier);
-			$authors[] = $author;
+		foreach($authorIdentifiers as $authorIdentifier) {
+			try {
+				$authors[] = $authRepo->getAuthorDetails($authorIdentifier);
+			} catch (\Exception $e) {
+			}
 		}
 		return $authors;
 	}

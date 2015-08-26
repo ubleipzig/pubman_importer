@@ -74,7 +74,7 @@ class PMIRest implements \TYPO3\CMS\Core\SingletonInterface
 			}
 			return $response->getBody();
 
-		} catch(Exception $e) {
+		} catch(\Exception $e) {
 			PMILog::push(sprintf(
 				'Error (%s): %s while connecting to %s on port %d',
 				$e->getCode(),

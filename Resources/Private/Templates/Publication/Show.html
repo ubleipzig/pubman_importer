@@ -12,11 +12,9 @@ List.html: keep
 Otherwise your changes will be overwritten the next time you save the extension in the extension builder
 
 <f:section name="main">
-	<h1>Single view for Publication {identifier}</h1>
+	<h1>{title}</h1>
 	<f:flashMessages renderMode="div" />
 	<div  class="tx_pubmanimporter" >
-		<h2>Title</h2>
-		{title}	
 		<h2>Authors</h2>
 		<ul>
 			<f:for each="{authors}" as="author" iteration="authorIterator">
@@ -29,5 +27,5 @@ Otherwise your changes will be overwritten the next time you save the extension 
 		</ul>
 	</div>
 
-	<f:link.action action="list">Back to List</f:link.action>
+	<f:link.action action="list" arguments="{objectId : parent}">Back to List</f:link.action>
 </f:section>
