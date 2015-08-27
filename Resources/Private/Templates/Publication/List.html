@@ -34,6 +34,13 @@ Otherwise your changes will be overwritten the next time you save the extension 
                             </a>
                         </f:if>
                     </f:for>
+                    <f:for each="{publication.fulltextlink}" as="fulltextlink">
+                        <f:if condition="{fulltextlink.mime-type} == 'application/xml'">
+                            <a href="{publication.source_url}{fulltextlink.href}" title="{fulltextlink.mime-type}" class="publication_fulltext_link">
+                                XML
+                            </a>
+                        </f:if>
+                    </f:for>
                     <f:link.action action="show" arguments="{publication : publication.object_id, parent : objectId}" class="publication_show_link">Details</f:link.action>
                 </li>
             </f:for>
