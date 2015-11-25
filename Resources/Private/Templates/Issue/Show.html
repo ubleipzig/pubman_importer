@@ -1,0 +1,36 @@
+<f:layout name="Default"/>
+
+This Template is responsible for displaying a single view for a domain object
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+Resources:
+Private:
+Templates:
+Show.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+<f:section name="main">
+    <f:debug>{Issue}</f:debug>
+    <f:flashMessages renderMode="div"/>
+    <h1>{Issue.title}</h1>
+    <ul>
+        <f:for each="{Issue.Article}" as="Article">
+            <li>
+                <f:link.action action="show" controller="Article" arguments="{Article: Article, Issue: Issue, Journal: Journal, Context: Context}">{Article.title}
+                </f:link.action>
+                <br/>
+                <f:for each="{Article.creator}" as="Creator" iteration="itemIteration">{Creator.givenName} {Creator.familyName}
+                    <f:if condition="{itemIteration.isLast}">
+                        <f:then></f:then>
+                        <f:else>,</f:else>
+                    </f:if>
+                </f:for>
+                <br/>
+                {Article.abstract}
+            </li>
+        </f:for>
+    </ul>
+    <f:if condition="{Journal}"><f:link.action action="show" controller="Journal" arguments="{Journal: Journal, Context: Context}">back to Journal</f:link.action><br/></f:if>
+    <f:if condition="{Context}"><f:link.action action="list" controller="Journal">back to all Journals</f:link.action><br/></f:if>
+</f:section>

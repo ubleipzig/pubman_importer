@@ -52,6 +52,11 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
             );
     }
 
+    /**
+     * shows all Articles of an issue
+     *
+     * @return mixed
+     */
     private function getAllItems() {
         $tmp_pubman_options = $this->pubman_options;
         $tmp_pubman_options['search_string'] = $this->_buildAllItemsSearchString();
@@ -71,6 +76,15 @@ class PublicationRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
         return $items;
     }
 
+    /**
+     * shows all issues
+     *
+     * @param $objectId
+     * @param $startRecord
+     * @param $maxRecords
+     * @param bool|false $nestedCall
+     * @return mixed
+     */
     private function getChildren($objectId, $startRecord, $maxRecords, $nestedCall = false) {
 
         $query = array( 'cqlQuery'       => $this->_buildChildrenSearchString($objectId),

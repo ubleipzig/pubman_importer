@@ -109,6 +109,7 @@ class PMIRest implements \TYPO3\CMS\Core\SingletonInterface
 
 			$post = array('escidoc_content' => '', 'escidoc_title' => '', 'fulltextlink' => '', 'extfulltextlink' => '', 'escidoc_date' => '');
 
+			$post['newValues'] = $this->parseNew($xml, $escidocItem);
 			$post['object_id'] = $this->getNodeAttr($escidocItem, 'objid');
 			list(, $post['escidoc_id']) = explode(':', $this->getNodeAttr($escidocItem, 'objid'));
 			PMILog::debug("Working on escidoc with id " . $post['escidoc_id']);
@@ -551,6 +552,25 @@ class PMIRest implements \TYPO3\CMS\Core\SingletonInterface
 		return $return;
 	}
 
+	private function parseNew($domDocument, $esciDocItemNode) {
+		$result = [];
+
+		$xpath = new \DOMXPath($domDocument);
+
+		$xpath->registerNamespace('dcterms', 'http://purl.org/dc/terms/');
+		$xpath->registerNamespace('dc', 'http://purl.org/dc/elements/1.1/');
+		$xpath->registerNamespace('source', 'http://purl.org/escidoc/metadata/profiles/0.1/source');
+
+		$date = $xpath->query('escidocItem:properties/prop:latest-release/release:date', $esciDocItemNode)->item(0)->nodeValue;
+		$result['releaseDate'] = new \DateTime($date);
+
+		$result['type'] = preg_replace('!^.*/([^/]+)$!', '$1', $this->getNodeAttr($xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication', $esciDocItemNode)->item(0), 'type'));
+		$result['abstract'] = $xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication/dcterms:abstract', $esciDocItemNode)->item(0)->nodeValue;
+		$result['identifier'] = $xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication/source:source/dc:identifier', $esciDocItemNode)->item(0)->nodeValue;
+		$result['title'] = $xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication/source:source/dc:title', $esciDocItemNode)->item(0)->nodeValue;
+
+		return $result;
+	}
 }
 
 ?>

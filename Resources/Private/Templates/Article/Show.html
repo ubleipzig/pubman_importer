@@ -1,0 +1,47 @@
+<f:layout name="Default"/>
+<f:section name="main">
+    <f:debug>{Article}</f:debug>
+
+    <h1>{Article.title}</h1>
+
+    <p>
+        <f:for each="{Article.creator}" as="Creator" iteration="itemIteration">{Creator.givenName} {Creator.familyName}
+            <f:if condition="{itemIteration.isLast}">
+                <f:then></f:then>
+                <f:else>,</f:else>
+            </f:if>
+        </f:for>
+    </p>
+    <p>
+        <f:for each="{Article.component}" as="Component" iteration="ItemIteration">
+            <f:if condition="{ItemIteration.isFirst}">
+                <f:then>Volltext:</f:then>
+                <f:else> |</f:else>
+            </f:if>
+            <f:if condition="{Component.mimeType == 'application/pdf'}">
+                <f:link.action action="stream" controller="Component" arguments="{Component: Component}">PDF
+                </f:link.action>
+            </f:if>
+            <f:if condition="{Component.mimeType == 'text/xml'}">
+                <f:link.action action="show" controller="Component" arguments="{Component: Component}">HTML
+                </f:link.action>
+            </f:if>
+        </f:for>
+    </p>
+    <p>
+
+        <f:if condition="{Issue}">
+            <f:link.action action="show" controller="Issue"
+                           arguments="{Issue: Issue, Journal: Journal, Context: Context}">back to Issue
+            </f:link.action>
+            <br/></f:if>
+        <f:if condition="{Journal}">
+            <f:link.action action="show" controller="Journal" arguments="{Journal: Journal, Context: Context}">back to
+                Journal
+            </f:link.action>
+            <br/></f:if>
+        <f:if condition="{Context}">
+            <f:link.action action="list" controller="Journal">back to all Journals</f:link.action>
+            <br/></f:if>
+    </p>
+</f:section>

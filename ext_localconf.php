@@ -28,3 +28,21 @@ if (!defined('TYPO3_MODE')) {
 		'Organization' => 'list, show',
 	)
 );
+
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+	'LeipzigUniversityLibrary.' . $_EXTKEY,
+	'Journals',
+	array(
+		'Journal' => 'list, show',
+		'Issue' => 'list, show',
+		'Article' => 'listByIssue, listByCreator, show',
+		'Component' => 'list, show',
+	),
+	// non-cacheable actions
+	array(
+		'Journal' => 'list, show',
+		'Issue' => 'list, show',
+		'Article' => 'listByIssue, listByCreator, show',
+		'Component' => 'list, show',
+	)
+);

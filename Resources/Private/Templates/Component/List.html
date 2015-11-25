@@ -1,0 +1,27 @@
+<f:layout name="Default" />
+
+This Template is responsible for creating a table of domain objects.
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+    Private:
+      Templates:
+        List.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+<f:section name="main">
+<h1>Journals</h1>
+
+<f:flashMessages renderMode="div" />
+
+	<div class="tx_pubmanimporter">
+		found Journals:
+		<ul>
+			<f:for each="{Components}" as="Component">
+				<li><f:link.action action="show" arguments="{Component: Component}">{Component.title}</f:link.action></li>
+			</f:for>
+		</ul>
+	</div>
+</f:section>
