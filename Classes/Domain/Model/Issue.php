@@ -1,7 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 
-
     /***************************************************************
      *
      *  Copyright notice
@@ -30,7 +29,21 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Issue
  */
-class Issue extends AbstractItem {
+class Issue extends \LeipzigUniversityLibrary\PubmanImporter\Library\AbstractItemModel {
+
+    /**
+     * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
+     *      /publication:publication/source:source/eterms:issue
+     * @var string
+     */
+    protected $issueTerm;
+
+    /**
+     * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
+     *      /publication:publication/dcterms:issued[@xsi:type="dcterms:W3CDTF"]
+     * @var string
+     */
+    protected $issuedYear;
 
     /**
      * article
@@ -91,5 +104,21 @@ class Issue extends AbstractItem {
      */
     public function setArticle(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $article) {
         $this->article = $article;
+    }
+
+    public function setIssueTerm($value) {
+        $this->issueTerm = $value;
+    }
+
+    public function getIssueTerm() {
+        return $this->issueTerm;
+    }
+
+    public function setIssuedYear($value) {
+        $this->issuedYear = $value;
+    }
+
+    public function getIssuedYear() {
+        return $this->issuedYear;
     }
 }

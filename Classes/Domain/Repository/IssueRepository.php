@@ -35,10 +35,13 @@ class IssueRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\P
     protected $_escidocPublicationType = 'http://purl.org/escidoc/metadata/ves/publication-types/issue';
 
     public function __construct() {
+        $this->_sortKeys = 'sort.escidoc.publication.issued';
         return call_user_func_array(array('parent', '__construct'), func_get_args());
     }
 
     public function parse($id = false) {
+        $this->parseXml();
+
         if (0 === (int)$this->countAll()) {
             throw new \Exception('no data found');
         }
@@ -46,27 +49,23 @@ class IssueRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\P
         $result = [];
 
         foreach ($this->_xpath->query('/escidocItemList:item-list/escidocItem:item') as $itemNode) {
-            $model = $this->parseIssue($itemNode);
+            $model = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Issue');
+
+            $this->parseGenerics($itemNode, $model);
+
+            $this->parseIssue($itemNode, $model);
+
             if ($id) $model->setPid($id);
+
             $result[] = $model;
         }
 
         return $result;
     }
 
-    public function parseIssue($itemNode) {
-        $model = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Issue');
-
-        $publication = $this->_xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication', $itemNode)->item(0);
-
-        $model->setUid($this->getNodeAttr('objid', $itemNode));
-        $this->parseComponents($this->_xpath->query('escidocComponents:components/escidocComponents:component', $itemNode), $model);
-        $this->parseCreators($this->_xpath->query('eterms:creator', $publication), $model);
-
-        $model->setTitle($this->_xpath->query('dc:title', $publication)->item(0)->nodeValue);
-        $model->setReleaseDate(new \DateTime($this->_xpath->query('escidocItem:properties/prop:latest-release/release:date', $itemNode)->item(0)->nodeValue));
-        $model->setPublisher($this->_xpath->query('eterms:publishing-info/dc:publisher', $publication)->item(0)->nodeValue);
-
-        return $model;
+    public function parseIssue($node, $model) {
+        $model->setIssuedYear($this->_xpath->query('dcterms:issued[@xsi:type="dcterms:W3CDTF"]', $this->_publicationNode)->item(0)->nodeValue);
+        $model->setIssueTerm($this->_xpath->query('source:source/eterms:issue', $this->_publicationNode)->item(0)->nodeValue);
+        return $this;
     }
 }

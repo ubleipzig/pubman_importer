@@ -35,11 +35,15 @@ class ArticleRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
 
     protected $_escidocPublicationType = 'http://purl.org/escidoc/metadata/ves/publication-types/article';
 
-    public function __construct() {
+    public function __construct()
+    {
         return call_user_func_array(array('parent', '__construct'), func_get_args());
     }
 
-    public function parse() {
+    public function parse($pid = false)
+    {
+        $this->parseXml();
+
         if (0 === (int)$this->countAll()) {
             throw new \Exception('no data found');
         }
@@ -47,32 +51,15 @@ class ArticleRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
         $result = [];
 
         foreach ($this->_xpath->query('/escidocItemList:item-list/escidocItem:item') as $itemNode) {
-            $result[] = $this->parseArticle($itemNode);
+            $model = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article');
+
+            $this->parseGenerics($itemNode, $model);
+
+            if ($pid) $model->setPid($pid);
+
+            $result[] = $model;
         }
 
         return $result;
     }
-
-    public function getByCreator($creator) {
-
-    }
-
-    public function parseArticle($itemNode) {
-        $model = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article');
-
-        $publication = $this->_xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication', $itemNode)->item(0);
-
-        $model->setUid($this->getNodeAttr('objid', $itemNode));
-        $this->parseComponents($this->_xpath->query('escidocComponents:components/escidocComponents:component', $itemNode), $model);
-        $this->parseCreators($this->_xpath->query('eterms:creator', $publication), $model);
-
-        $model->setTitle($this->_xpath->query('dc:title', $publication)->item(0)->nodeValue);
-        $model->setReleaseDate(new \DateTime($this->_xpath->query('escidocItem:properties/prop:latest-release/release:date', $itemNode)->item(0)->nodeValue));
-        $model->setPublisher($this->_xpath->query('eterms:publishing-info/dc:publisher', $publication)->item(0)->nodeValue);
-        $model->setAbstract($this->_xpath->query('dcterms:abstract', $publication)->item(0)->nodeValue);
-
-        return $model;
-    }
-
-
 }

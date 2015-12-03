@@ -1,7 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 
-
     /***************************************************************
      *
      *  Copyright notice
@@ -33,7 +32,11 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 class Component extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 {
 
-    protected $htmlContent;
+    protected $content;
+
+    protected $url;
+
+    protected $path;
 
     protected $fileName;
 
@@ -43,14 +46,12 @@ class Component extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 
     protected $storage;
 
-    protected $href;
-
-    public function setHtmlContent($value) {
-        $this->htmlContent = $value;
+    public function setContent($value) {
+        $this->content = $value;
     }
 
-    public function getHtmlContent() {
-        return $this->htmlContent;
+    public function getContent() {
+        return $this->content;
     }
 
     public function setMimeType($value)
@@ -92,5 +93,25 @@ class Component extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 
     public function getUid() {
         return $this->uid;
+    }
+
+    public function setUrl($value) {
+        $this->url = $value;
+    }
+
+    public function getUrl() {
+        return $this->url;
+    }
+
+    public function setPath($value) {
+        $this->path = $value;
+    }
+
+    public function getPath() {
+        return $this->path;
+    }
+
+    public function getHref() {
+        return $this->getUrl() . $this->getPath();
     }
 }

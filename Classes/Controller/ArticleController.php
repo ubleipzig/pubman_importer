@@ -62,6 +62,11 @@ class ArticleController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
     public function showAction($Article, $Issue = false, $Journal = false, $Context = false) {
         $Article = $this->ArticleRepository->findByUid($Article);
 
+        foreach ($Article->getCreator() as  $Creator) {
+            foreach ($this->ArticleRepository->findByCreator($Creator) as $a) {
+                $Creator->addArticle($a);
+            }
+        }
         if ($Issue) $Article->setPid($Issue);
 
         $this->view->assign('Issue', $Issue);
@@ -69,6 +74,4 @@ class ArticleController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $this->view->assign('Context', $Context);
         $this->view->assign('Article', $Article);
     }
-
-
 }

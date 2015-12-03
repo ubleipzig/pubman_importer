@@ -34,15 +34,15 @@ if (!defined('TYPO3_MODE')) {
 	'Journals',
 	array(
 		'Journal' => 'list, show',
-		'Issue' => 'list, show',
-		'Article' => 'listByIssue, listByCreator, show',
-		'Component' => 'list, show',
+		'Issue' => 'show',
+		'Article' => 'show',
+		'Content' => 'show, stream',
 	),
 	// non-cacheable actions
 	array(
 		'Journal' => 'list, show',
-		'Issue' => 'list, show',
-		'Article' => 'listByIssue, listByCreator, show',
-		'Component' => 'list, show',
+		'Issue' => 'show',
+		'Article' => 'show',
+		'Content' => 'show, stream',
 	)
 );

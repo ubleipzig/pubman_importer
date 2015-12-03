@@ -30,7 +30,7 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Journal
  */
-class Journal extends AbstractItem {
+class Journal extends \LeipzigUniversityLibrary\PubmanImporter\Library\AbstractItemModel {
 
 	/**
 	 * issue

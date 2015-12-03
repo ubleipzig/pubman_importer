@@ -15,7 +15,7 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         'all' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.type="%3$s"',
         'byPid' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND (escidoc.any-identifier="%3$s" NOT escidoc.objid="%3$s")',
         'byUid' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.objid="%3$s" AND escidoc.publication.type="%4$s"',
-        'byCreator' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.creator.person.identifier="%3$s"',
+        'byCreator' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.creator.person.organization.identifier="%3$s"',
     ];
 
     protected $_exportFormat = 'ESCIDOC_XML_V13';
@@ -30,13 +30,19 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
 
     protected $_querySettings = [];
 
-    protected $_url = 'https://publishing.ub.uni-leipzig.de/search/SearchAndExport';
+    protected $_url = 'https://publishing.ub.uni-leipzig.de';
+
+    protected $_path = '/search/SearchAndExport';
 
     protected $_query = '';
 
     protected $_domDocument;
 
+    protected $_body;
+
     protected $_xpath;
+
+    protected $_publicationNode;
 
 
     /**
@@ -63,7 +69,7 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
 
     public function setOptions($settings) {
         foreach ($settings as $key => $value) {
-            if (!$this->{'_' . $key}) continue;
+            if (false === property_exists($this, '_' . $key)) continue;
 
             $this->{'_' . $key} = $value;
         }
@@ -154,14 +160,19 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
     {
         $this->createQuery();
 
-        $response = $this->_httpRequest->setUrl($this->_url . '?' . $this->_query)->send();
+        $response = $this->_httpRequest->setUrl($this->_url . $this->_path . (empty($this->_query) ? '' : '?' . $this->_query))->send();
 
         if ($response->getStatus() !== 200) {
-            throw new Exception(sprintf('Request failed: %s', $response->getStatus()));
+            throw new \Exception(sprintf('Request failed: %s', $response->getStatus()));
         }
 
-        $body = $response->getBody();
-        $this->_domDocument = \DOMDocument::loadXML($body);
+        $this->_body = $response->getBody();
+
+        return $this;
+    }
+
+    public function parseXml() {
+        $this->_domDocument = \DOMDocument::loadXML($this->_body);
         $this->_xpath = new \DOMXPath($this->_domDocument);
 
         return $this;
@@ -172,15 +183,6 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         $this->_query = http_build_query($this->_querySettings);
 
         return $this;
-    }
-
-    protected function getNodeAttr($attributeName, $domNode) {
-        foreach ($domNode->attributes as $attributeElement) {
-            if ($attributeElement->name !== $attributeName) continue;
-            return $attributeElement->value;
-        }
-
-        throw new \Exception(sprintf('cannot find attribute %s', $attributeName));
     }
 
     /**
@@ -256,9 +258,7 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
      * @api
      */
     public function countAll() {
-        $dom = $this->_xpath->query('/escidocItemList:item-list')->item(0);
-
-        return $this->getNodeAttr('number-of-records', $dom);
+        return $this->_xpath->query('/escidocItemList:item-list')->item(0)->getAttribute('number-of-records');
     }
 
     /**
@@ -272,34 +272,63 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         $this->findById($uid);
     }
 
-    public function parseComponents($componentNodeList, $model) {
-        foreach ($componentNodeList as $componentNode) {
+    public function parseComponents($nodeList, $model) {
+        foreach ($nodeList as $node) {
             $component = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component');
-            $component->setMimeType($this->_xpath->query('escidocComponents:properties/prop:mime-type', $componentNode)->item(0)->nodeValue);
-            $component->setFileName($this->_xpath->query('escidocComponents:properties/prop:file-name', $componentNode)->item(0)->nodeValue);
+            $component->setUid($node->getAttribute('objid'));
+            $component->setMimeType($this->_xpath->query('escidocComponents:properties/prop:mime-type', $node)->item(0)->nodeValue);
+            $component->setFileName($this->_xpath->query('escidocComponents:properties/prop:file-name', $node)->item(0)->nodeValue);
 
-            $componentFileMetadata = $this->_xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/file:file', $componentNode)->item(0);
+            $componentFileMetadata = $this->_xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/file:file', $node)->item(0);
             $component->setLicense($this->_xpath->query('dcterms:license', $componentFileMetadata)->item(0)->nodeValue);
 
-            $contentNode = $this->_xpath->query('escidocComponents:content', $componentNode)->item(0);
-            $component->setStorage($this->getNodeAttr('storage', $contentNode));
-            $component->setUid($this->getNodeAttr('href', $contentNode));
+            $contentNode = $this->_xpath->query('escidocComponents:content', $node)->item(0);
+            $component->setStorage($contentNode->getAttribute('storage'));
+            $component->setPath($contentNode->getAttribute('xlink:href'));
+            $component->setUrl($this->getUrl());
             $model->addComponent($component);
         }
 
         return $this;
     }
 
-    public function parseCreators($creatorNodeList, $model) {
-        foreach ($creatorNodeList as $creatorNode) {
+    public function parseCreators($nodeList, $model) {
+        foreach ($nodeList as $node) {
             $creator = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Creator');
-            $creator->setFamilyName($this->_xpath->query('person:person/eterms:family-name', $creatorNode)->item(0)->nodeValue);
-            $creator->setGivenName($this->_xpath->query('person:person/eterms:given-name', $creatorNode)->item(0)->nodeValue);
-            $creator->setUid($this->_xpath->query('person:person/dc:identifier', $creatorNode)->item(0)->nodeValue);
+            $creator->setFamilyName($this->_xpath->query('person:person/eterms:family-name', $node)->item(0)->nodeValue);
+            $creator->setGivenName($this->_xpath->query('person:person/eterms:given-name', $node)->item(0)->nodeValue);
+            $creator->setOrganization($this->_xpath->query('person:person/organization:organization/dc:title', $node)->item(0)->nodeValue);
+            $creator->setAddress($this->_xpath->query('person:person/organization:organization/eterms:address', $node)->item(0)->nodeValue);
+            $creator->setUid($this->_xpath->query('person:person/organization:organization/dc:identifier', $node)->item(0)->nodeValue);
+            $creator->setHref($this->_xpath->query('person:person/dc:identifier[@xsi:type="eterms:CONE"]', $node)->item(0)->nodeValue);
             $model->addCreator($creator);
         }
 
         return $this;
+    }
+
+    public function parseGenerics($node, $model) {
+        $this->_publicationNode = $this->_xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication', $node)->item(0);
+
+        $model->setUid($node->getAttribute('objid'));
+        $this->parseComponents($this->_xpath->query('escidocComponents:components/escidocComponents:component', $node), $model);
+        $this->parseCreators($this->_xpath->query('eterms:creator', $this->_publicationNode), $model);
+
+        $model->setTitle($this->_xpath->query('dc:title', $this->_publicationNode)->item(0)->nodeValue);
+        $model->setReleaseDate(new \DateTime($this->_xpath->query('escidocItem:properties/prop:latest-release/release:date', $node)->item(0)->nodeValue));
+        $model->setPublisher($this->_xpath->query('eterms:publishing-info/dc:publisher', $this->_publicationNode)->item(0)->nodeValue);
+        $model->setAbstract($this->_xpath->query('dcterms:abstract', $this->_publicationNode)->item(0)->nodeValue);
+        $model->setIdentifier($this->_xpath->query('source:source/dc:identifier[@xsi:type="eterms:URI"]', $this->_publicationNode)->item(0)->nodeValue);
+
+        return $this;
+    }
+
+    public function getUrl() {
+        return $this->_url;
+    }
+
+    public function getBody() {
+        return $this->_body;
     }
 
     abstract public function parse();

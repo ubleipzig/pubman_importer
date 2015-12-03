@@ -1,8 +1,8 @@
 
 plugin.tx_pubmanimporter {
 	settings {
-		# PMIRest
-		url = https://publishing.ub.uni-leipzig.de/search/SearchAndExport
+		url = https://publishing.ub.uni-leipzig.de
+		path = /search/SearchAndExport
 		escidocContentModelObjid = escidoc:2001
 		escidocContextObjid = ubl:10444
 		journalObjid = ubl:10502

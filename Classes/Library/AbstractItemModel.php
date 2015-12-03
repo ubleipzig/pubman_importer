@@ -1,5 +1,5 @@
 <?php
-namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
+namespace LeipzigUniversityLibrary\PubmanImporter\Library;
 
 
     /***************************************************************
@@ -30,7 +30,15 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Article
  */
-abstract class AbstractItem extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+abstract class AbstractItemModel extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+
+    /**
+     * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
+     *      /publication:publication/source:source/dc:identifier[xsi:type="eterms:URI"]
+     *
+     * @var string
+     */
+    protected $identifier;
 
     /**
      * Title of article
@@ -224,4 +232,13 @@ abstract class AbstractItem extends \TYPO3\CMS\Extbase\DomainObject\AbstractEnti
     public function getAbstract() {
         return $this->abstract;
     }
+
+    public function setIdentifier($value) {
+        $this->identifier = $value;
+    }
+
+    public function getIdentifier() {
+        return $this->identifier;
+    }
+
 }

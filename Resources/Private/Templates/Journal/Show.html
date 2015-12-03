@@ -24,8 +24,8 @@ Otherwise your changes will be overwritten the next time you save the extension 
         </tr>
         <f:for each="{Journal.issue}" as="Issue">
             <tr>
-                <td><f:link.action action="show" controller="Issue" arguments="{Issue: Issue, Journal: Journal, Context: Context}">{Issue.title}</f:link.action></td>
-                <td>{Issue.releaseDate -> f:format.date(format: 'd.m.Y')}</td>
+                <td><f:link.action action="show" controller="Issue" arguments="{Issue: Issue, Journal: Journal, Context: Context}">Heft {Issue.issueTerm}</f:link.action></td>
+                <td>{Issue.issuedYear}</td>
             </tr>
         </f:for>
     </table>

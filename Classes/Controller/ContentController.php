@@ -27,17 +27,25 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Controller;
      ***************************************************************/
 
 /**
- * ComponentController
+ * ContentController
  */
-class ComponentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 
     /**
-     * ComponentRepository
+     * ArticleRepository
      *
-     * @var \LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\ComponentRepository
+     * @var \LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\ArticleRepository
      * @inject
      */
-    protected $ComponentRepository = NULL;
+    protected $ArticleRepository = NULL;
+
+    /**
+     * ContentRepository
+     *
+     * @var \LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\ContentRepository
+     * @inject
+     */
+    protected $ContentRepository = NULL;
 
     /**
      * action list
@@ -46,7 +54,7 @@ class ComponentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContro
      * @return void
      */
     public function listAction($Component) {
-        $Components = $this->ComponentRepository->findByPid($Component);
+        $Components = $this->ContentRepository->findByComponent($Component);
         $this->view->assign('Components', $Components);
     }
 
@@ -60,8 +68,16 @@ class ComponentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContro
      * @param string $Context
      * @return void
      */
-    public function showAction($Component, $Article = false, $Issue = false, $Journal = false, $Context = false) {
-        $Component = $this->ComponentRepository->findByUid($Component);
+    public function showAction($Component, $Article, $Issue = false, $Journal = false, $Context = false) {
+        $Article = $this->ArticleRepository->findByUid($Article);
+        $this->ContentRepository->setBaseUri($this->request->getRequestUri());
+
+        foreach ($Article->getComponent() as $component) {
+            if ($component->getUid() !== $Component) continue;
+            $component->setContent($this->ContentRepository->findByComponent($component));
+            $Component = $component;
+            break;
+        }
 
         $this->view->assign('Component', $Component);
         $this->view->assign('Article', $Article);
@@ -70,9 +86,22 @@ class ComponentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContro
         $this->view->assign('Context', $Context);
     }
 
-    public function streamAction($Component) {
-        $Component = $this->ComponentRepository->findByUid($Component);
+    /**
+     * action stream
+     *
+     * @param string $Component
+     * @param string $Article
+     */
+    public function streamAction($Component, $Article) {
+        $Article = $this->ArticleRepository->findByUid($Article);
 
+        foreach ($Article->getComponent() as $component) {
+            if ($component->getUid() !== $Component) continue;
+            $component->setContent($this->ContentRepository->findByComponent($component));
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            $this->response->setContent($component->getContent());
+            $this->response->send();
+            exit;
+        }
     }
-
 }

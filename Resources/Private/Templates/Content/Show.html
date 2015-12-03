@@ -1,0 +1,72 @@
+
+<f:layout name="Default" />
+
+This Template is responsible for displaying a single view for a domain object
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+    Private:
+      Templates:
+        Show.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+<f:section name="main">
+<!--  <f:debug>{Article}</f:debug>
+  <f:debug>{Component}</f:debug> -->
+<f:flashMessages renderMode="div" />
+
+  <h2>{Article.title}</h2>
+  <div class="author">
+    <f:for each="{Article.creator}" as="Creator" iteration="itemIteration">{Creator.givenName} {Creator.familyName}
+      <f:if condition="{itemIteration.isLast}">
+        <f:then></f:then>
+        <f:else>,</f:else>
+      </f:if>
+      <f:if condition="{Creator.article}">
+        <div class="title">
+          <ul>
+            <f:for each="{Creator.article}" as="CreatorArticle">
+              <li><f:link.action action="show" arguments="{Article: CreatorArticle}">{CreatorArticle.title}</f:link.action></li>
+            </f:for>
+          </ul>
+        </div>
+      </f:if>
+    </f:for>
+  </div>
+  <f:if condition="{Article.abstract}">
+    <div class="abstract"> Abstract:<br/>
+      {Article.abstract}
+    </div>
+  </f:if>
+
+  <f:if condition="{Article.keywords}">
+    {Article.keywords}
+  </f:if>
+
+  <f:if condition="{Component.license}">
+    <a href="{Component.license}">{Component.license}</a>
+  </f:if>
+
+  <div class="fulltext">
+    <f:format.raw>{Component.content}</f:format.raw>
+  </div>
+
+  <div class="navigation">
+    <f:if condition="{Issue}">
+      <f:link.action action="show" controller="Issue"
+                     arguments="{Issue: Issue, Journal: Journal, Context: Context}">back to Issue
+      </f:link.action>
+      <br/></f:if>
+    <f:if condition="{Journal}">
+      <f:link.action action="show" controller="Journal" arguments="{Journal: Journal, Context: Context}">back to
+        Journal
+      </f:link.action>
+      <br/></f:if>
+    <f:if condition="{Context}">
+      <f:link.action action="list" controller="Journal">back to all Journals</f:link.action>
+      <br/></f:if>
+  </div>
+
+</f:section>

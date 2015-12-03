@@ -1,7 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 
-
 /***************************************************************
  *
  *  Copyright notice
@@ -30,11 +29,21 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Component
  */
-class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject {
+class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	protected $familyName;
 
     protected $givenName;
+
+    protected $organization;
+
+    protected $address;
+
+    protected $url;
+
+    protected $path;
+
+    protected $position;
 
     /**
      * article
@@ -125,5 +134,53 @@ class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject {
 
     public function getUid() {
         return $this->uid;
+    }
+
+    public function setPath($value) {
+        $this->path = $value;
+    }
+
+    public function getPath() {
+        return $this->path;
+    }
+
+    public function setUrl($value) {
+        $this->url = $value;
+    }
+
+    public function getUrl() {
+        return $this->url;
+    }
+
+    public function setHref($value) {
+        if (!$value)
+            return;
+
+        $path = parse_url($value, PHP_URL_PATH);
+
+        $url = strstr($value, $path, true);
+
+        $this->setUrl($url);
+        $this->setPath($path);
+    }
+
+    public function getHref() {
+        return $this->getUrl() . $this->getPath();
+    }
+
+    public function setOrganization($value) {
+        $this->organization = $value;
+    }
+
+    public function getOrganization() {
+        return $this->organization;
+    }
+
+    public function setAddress($value) {
+        $this->address = $value;
+    }
+
+    public function getAddress() {
+        return $this->address;
     }
 }

@@ -1,7 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 
-
     /***************************************************************
      *
      *  Copyright notice
@@ -30,6 +29,38 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Article
  */
-class Article extends AbstractItem {
+class Article extends \LeipzigUniversityLibrary\PubmanImporter\Library\AbstractItemModel {
 
+    /**
+     * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
+     *      /publication:publication/source:source/eterms:start-page
+     *
+     * @var string
+     */
+    protected $startPage;
+
+    /**
+     * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
+     *      /publication:publication/source:source/eterms:end-page
+     *
+     * @var string
+     */
+    protected $endPage;
+
+
+    public function setStartPage($value) {
+        $this->startPage = $value;
+    }
+
+    public function getStartPage() {
+        return $this->startPage;
+    }
+
+    public function setEndPage($value) {
+        $this->endPage =$value;
+    }
+
+    public function getEndPage() {
+        return $this->endPage;
+    }
 }

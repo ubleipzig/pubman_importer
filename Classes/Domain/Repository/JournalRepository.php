@@ -50,14 +50,18 @@ class JournalRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
     }
 
     public function parse($id = false) {
+        $this->parseXml();
+
         if (0 === (int)$this->countAll()) {
-            throw new Exception('no data found');
+            throw new \Exception('no data found');
         }
 
         $result = [];
 
         foreach ($this->_xpath->query('/escidocItemList:item-list/escidocItem:item') as $itemNode) {
-            $model = $this->parseJournal($itemNode);
+            $model = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Journal');
+
+            $this->parseGenerics($itemNode, $model);
 
             if ($id) $model->setPid($id);
 
@@ -65,21 +69,5 @@ class JournalRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
         }
 
         return $result;
-    }
-
-    public function parseJournal($itemNode) {
-        $model = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Journal');
-
-        $publication = $this->_xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication', $itemNode)->item(0);
-
-        $model->setUid($this->getNodeAttr('objid', $itemNode));
-        $this->parseComponents($this->_xpath->query('escidocComponents:components/escidocComponents:component', $itemNode), $model);
-        $this->parseCreators($this->_xpath->query('eterms:creator', $publication), $model);
-
-        $model->setTitle($this->_xpath->query('dc:title', $publication)->item(0)->nodeValue);
-        $model->setReleaseDate(new \DateTime($this->_xpath->query('escidocItem:properties/prop:latest-release/release:date', $itemNode)->item(0)->nodeValue));
-        $model->setPublisher($this->_xpath->query('eterms:publishing-info/dc:publisher', $publication)->item(0)->nodeValue);
-
-        return $model;
     }
 }
