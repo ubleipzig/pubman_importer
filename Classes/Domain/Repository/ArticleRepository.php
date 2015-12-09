@@ -40,6 +40,15 @@ class ArticleRepository extends ItemRepository
         'byCreator' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.creator.person.organization.identifier="%3$s"',
     ];
 
+    /**
+     * sort is not working properly since its not integer- but string-sort
+     *
+     * @var string
+     */
+    protected $_sortKeys = 'sort.escidoc.publication.source.start-page';
+
+    protected $_sortOrder = 'ascending';
+
     public function __construct()
     {
         return call_user_func_array(array('parent', '__construct'), func_get_args());
@@ -73,5 +82,8 @@ class ArticleRepository extends ItemRepository
     public function parseArticle($node, $model) {
         $model->setStartPage($this->_xpath->query('source:source/eterms:start-page', $node)->item(0)->nodeValue);
         $model->setEndPage($this->_xpath->query('source:source/eterms:end-page', $node)->item(0)->nodeValue);
+        $model->setIdentifier($this->_xpath->query('dc:identifier[@xsi:type="eterms:URN"]', $node)->item(0)->nodeValue);
+
+        return $this;
     }
 }

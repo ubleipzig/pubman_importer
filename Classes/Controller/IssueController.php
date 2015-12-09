@@ -69,7 +69,15 @@ class IssueController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     public function showAction($Issue, $Journal = false, $Context = false) {
         $Issue = $this->IssueRepository->findByUid($Issue);
 
-        foreach ($this->ArticleRepository->findByPid($Issue) as $Article) {
+        $articleCollection = $this->ArticleRepository->findByPid($Issue);
+
+        $articleStartPages = array_map(function($item) {
+            return $item->getStartPage();
+        }, $articleCollection);
+
+        array_multisort($articleStartPages, SORT_ASC, SORT_NUMERIC, $articleCollection);
+
+        foreach ($articleCollection as $Article) {
             $Issue->addArticle($Article);
         }
 

@@ -86,7 +86,6 @@ class ItemRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\PM
         $model->setAbstract($this->_xpath->query('dcterms:abstract', $this->_publicationNode)->item(0)->nodeValue);
         $model->setSubject($this->_xpath->query('dcterms:subject', $this->_publicationNode)->item(0)->nodeValue);
 
-        $model->setIdentifier($this->_xpath->query('source:source/dc:identifier[@xsi:type="eterms:URI"]', $this->_publicationNode)->item(0)->nodeValue);
         $model->setIssuedYear($this->_xpath->query('dcterms:issued[@xsi:type="dcterms:W3CDTF"]', $this->_publicationNode)->item(0)->nodeValue);
         $model->setIssueTerm($this->_xpath->query('source:source/eterms:issue', $this->_publicationNode)->item(0)->nodeValue);
 

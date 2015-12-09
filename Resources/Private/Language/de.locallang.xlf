@@ -36,6 +36,15 @@
 			<trans-unit id="license">
 				<target>Lizenz</target>
 			</trans-unit>
+			<trans-unit id="article_identifier">
+				<target>URN</target>
+			</trans-unit>
+			<trans-unit id="issue_identifier">
+				<target>URL zum Artikel</target>
+			</trans-unit>
+			<trans-unit id="content">
+				<target>Inhalt</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

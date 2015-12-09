@@ -6,19 +6,19 @@
         <h3>
             <f:translate key="issue">Issue</f:translate>
             {Issue.issueTerm}
-            (
-            <f:translate key="issued_in_year" arguments="{0: Issue.issuedYear}">issued in year %s</f:translate>
-            )
+            (<f:translate key="issued_in_year" arguments="{0: Issue.issuedYear}">issued in year %s</f:translate>)
         </h3>
+        <f:if condition="{Issue.identifier}">
+            <h4><f:translate key="issue_identifier">URL</f:translate>:</h4>
+            <div class="link"><a href="{Issue.identifier}" target="_blank">{Issue.identifier}</a></div>
+        </f:if>
         <f:if condition="{Issue.component}">
+            <h4><f:translate key="fulltext">Fulltext</f:translate>:</h4>
             <div class="components">
-                <h4>
-                    <f:translate key="fulltext">Fulltext</f:translate>
-                    :
-                </h4>
                 <f:render partial="Component/List" arguments="{Components: Issue.component, Item: Issue, Issue: Issue, Journal: Journal, Contex:Context}"/>
             </div>
         </f:if>
+        <h4><f:translate key="content">Content</f:translate>:</h4>
         <ol>
             <f:for each="{Issue.Article}" as="Article">
                 <li>

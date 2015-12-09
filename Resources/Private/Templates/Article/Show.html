@@ -1,6 +1,7 @@
 <f:layout name="Default"/>
 
 <f:section name="main">
+    <f:flashMessages renderMode="div"/>
     <h3>{Article.title}</h3>
 
     <div class="creators">
@@ -14,9 +15,14 @@
         </div>
     </f:if>
 
+    <f:if condition="{Article.identifier}">
+        <h4><f:translate key="article_identifier">URN</f:translate>:</h4>
+        <div class="identifier">{Article.identifier}</div>
+    </f:if>
+
     <f:if condition="{Article.component}">
+        <h4><f:translate key="fulltext">Fulltext</f:translate>:</h4>
         <div class="components">
-            <h4><f:translate key="fulltext">Fulltext</f:translate>:</h4>
             <f:render partial="Component/List" arguments="{Components: Article.component, Item: Article, Article: Article, Issue: Issue, Journal: Journal, Contex:Context}"/>
         </div>
     </f:if>

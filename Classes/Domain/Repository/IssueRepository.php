@@ -58,11 +58,19 @@ class IssueRepository extends ItemRepository {
 
             $this->parseGenerics($itemNode, $model);
 
+            $this->parseIssue($this->_publicationNode, $model);
             if ($id) $model->setPid($id);
 
             $result[] = $model;
         }
 
         return $result;
+
+    }
+
+    public function parseIssue($node, $model) {
+        $model->setIdentifier($this->_xpath->query('source:source/dc:identifier[@xsi:type="eterms:URI"]', $node)->item(0)->nodeValue);
+
+        return $this;
     }
 }
