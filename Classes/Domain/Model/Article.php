@@ -29,7 +29,7 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Article
  */
-class Article extends \LeipzigUniversityLibrary\PubmanImporter\Library\AbstractItemModel {
+class Article extends Item {
 
     /**
      * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
@@ -46,7 +46,6 @@ class Article extends \LeipzigUniversityLibrary\PubmanImporter\Library\AbstractI
      * @var string
      */
     protected $endPage;
-
 
     public function setStartPage($value) {
         $this->startPage = $value;

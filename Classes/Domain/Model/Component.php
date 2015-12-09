@@ -29,7 +29,7 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Component
  */
-class Component extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
+class Component extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
 
     protected $content;

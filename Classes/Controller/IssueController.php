@@ -1,6 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Controller;
-
+use \TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
     /***************************************************************
      *
      *  Copyright notice
@@ -77,5 +77,4 @@ class IssueController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $this->view->assign('Journal', $Journal);
         $this->view->assign('Context', $Context);
     }
-
 }

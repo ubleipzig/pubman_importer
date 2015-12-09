@@ -1,0 +1,17 @@
+<ul>
+    <f:for each="{Components}" as="Component">
+        <li>
+            <f:if condition="{Component.mimeType} == 'application/pdf'">
+                <f:link.action action="stream" controller="Content"
+                               arguments="{Component: Component, Item: Item}"><f:translate key="pdf">PDF</f:translate>
+                </f:link.action>
+            </f:if>
+            <f:if condition="{Component.mimeType} == 'application/xml'">
+                <f:link.action action="show" controller="Content"
+                               arguments="{Component: Component, Item: Item, Article: Article, Issue: Issue, Journal: Journal, Context: Context}">
+                    <f:translate key="html">HTML</f:translate>
+                </f:link.action>
+            </f:if>
+        </li>
+    </f:for>
+</ul>

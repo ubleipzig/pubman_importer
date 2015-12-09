@@ -1,0 +1,33 @@
+<ul>
+    <f:if condition="{Article}">
+        <li>
+            <f:link.action action="show" controller="Article"
+                           arguments="{Article: Article, Issue: Issue, Journal: Journal, Context: Context}">
+                <f:translate key="back_to_article">back to Article</f:translate>
+            </f:link.action>
+        </li>
+    </f:if>
+    <f:if condition="{Issue}">
+        <li>
+            <f:link.action action="show" controller="Issue"
+                           arguments="{Issue: Issue, Journal: Journal, Context: Context}">
+                <f:translate key="back_to_issue">back to Issue</f:translate>
+            </f:link.action>
+        </li>
+    </f:if>
+    <f:if condition="{Journal}">
+        <li>
+            <f:link.action action="show" controller="Journal" arguments="{Journal: Journal, Context: Context}">
+                <f:translate key="back_to_journal">back to Journal</f:translate>
+            </f:link.action>
+        </li>
+    </f:if>
+    <f:if condition="{Context}">
+        <li>
+            <f:link.action action="list" controller="Journal">
+                <f:translate key="back_to_all_journals">back to all Journals</f:translate>
+            </f:link.action>
+        </li>
+    </f:if>
+</ul>
+

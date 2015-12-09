@@ -1,5 +1,5 @@
 <?php
-namespace LeipzigUniversityLibrary\PubmanImporter\Library;
+namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 
 
     /***************************************************************
@@ -28,9 +28,23 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Library;
      ***************************************************************/
 
 /**
- * Article
+ * Item
  */
-abstract class AbstractItemModel extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Item extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+
+    /**
+     * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
+     *      /publication:publication/source:source/eterms:issue
+     * @var string
+     */
+    protected $issueTerm;
+
+    /**
+     * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
+     *      /publication:publication/dcterms:issued[@xsi:type="dcterms:W3CDTF"]
+     * @var string
+     */
+    protected $issuedYear;
 
     /**
      * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
@@ -41,7 +55,7 @@ abstract class AbstractItemModel extends \TYPO3\CMS\Extbase\DomainObject\Abstrac
     protected $identifier;
 
     /**
-     * Title of article
+     * Title of item
      *
      * @var string
      */
@@ -49,25 +63,33 @@ abstract class AbstractItemModel extends \TYPO3\CMS\Extbase\DomainObject\Abstrac
     protected $title;
 
     /**
-     * Release date of article
+     * Release date of item
      *
      * @var DateTime
      */
     protected $releaseDate;
 
     /**
-     * publisher of article
+     * publisher of item
      *
      * @var string
      */
     protected $publisher;
 
     /**
-     * abstract of article
+     * abstract of item
      *
      * @var string
      */
     protected $abstract;
+
+    /**
+     * subject of item
+     *
+     * @var string
+     */
+    protected $subject;
+
     /**
      * member
      *
@@ -241,4 +263,28 @@ abstract class AbstractItemModel extends \TYPO3\CMS\Extbase\DomainObject\Abstrac
         return $this->identifier;
     }
 
+    public function setSubject($value) {
+        $this->subject = $value;
+    }
+
+    public function getSubject() {
+        return $this->subject;
+    }
+
+
+    public function setIssueTerm($value) {
+        $this->issueTerm = $value;
+    }
+
+    public function getIssueTerm() {
+        return $this->issueTerm;
+    }
+
+    public function setIssuedYear($value) {
+        $this->issuedYear = $value;
+    }
+
+    public function getIssuedYear() {
+        return $this->issuedYear;
+    }
 }

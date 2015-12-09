@@ -1,33 +1,27 @@
 <f:layout name="Default"/>
-
-This Template is responsible for displaying a single view for a domain object
-
-If you modify this template, do not forget to change the overwrite settings
-in /Configuration/ExtensionBuilder/settings.yaml:
-Resources:
-Private:
-Templates:
-Show.html: keep
-
-Otherwise your changes will be overwritten the next time you save the extension in the extension builder
 <f:section name="main">
-    <f:debug>{Journal}</f:debug>
-
     <f:flashMessages renderMode="div"/>
-
-    <h1>{Journal.title}</h1>
+    <h3>{Journal.title}</h3>
 
     <table>
+        <thead>
         <tr>
-            <th>Heft Nr.</th>
-            <th>Jahr</th>
+            <th width="100em"><f:translate key="issue">Issue</f:translate></th>
+            <th><f:translate key="year">Year</f:translate></th>
         </tr>
+        </thead>
         <f:for each="{Journal.issue}" as="Issue">
             <tr>
-                <td><f:link.action action="show" controller="Issue" arguments="{Issue: Issue, Journal: Journal, Context: Context}">Heft {Issue.issueTerm}</f:link.action></td>
+                <td>
+                    <f:link.action action="show" controller="Issue"
+                                   arguments="{Issue: Issue, Journal: Journal, Context: Context}">{Issue.issueTerm}
+                    </f:link.action>
+                </td>
                 <td>{Issue.issuedYear}</td>
             </tr>
         </f:for>
     </table>
-    <f:if condition="{Context}"><f:link.action action="list" controller="Journal">back to all Journals</f:link.action><br/></f:if>
+    <f:if condition="{Context}">
+        <f:link.action action="list" controller="Journal">back to all Journals</f:link.action>
+    </f:if>
 </f:section>

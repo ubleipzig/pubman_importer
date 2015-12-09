@@ -1,64 +1,105 @@
-
 plugin.tx_pubmanimporter {
-	settings {
-		url = https://publishing.ub.uni-leipzig.de
-		path = /search/SearchAndExport
-		escidocContentModelObjid = escidoc:2001
-		escidocContextObjid = ubl:10444
-		journalObjid = ubl:10502
-		# AuthorRepo
-		#search_options = exportFormat=ESCIDOC_XML_V13&outputFormat=pdf&sortKeys=_relevance_&sortOrder=descending&startRecord=1&maximumRecords=50&cqlQuery=escidoc.publication.creator.person.family-name=
-		#objidXPath = /escidocItemList:item-list/escidocItem:item/@objid
-		#titleXPath = /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records[1]/escidocMetadataRecords:md-record[1]/publication:publication[1]/*[namespace-uri()='http://purl.org/dc/elements/1.1/' and local-name()='title'][1]
+    settings {
+        url = https://publishing.ub.uni-leipzig.de
+        path = /search/SearchAndExport
 
-		exportFormat = ESCIDOC_XML_V13
-		sortKeys = escidoc.publication.source.issue
-		sortOrder = ascending
-	}
-	view {
-		templateRootPath = {$plugin.tx_pubmanimporter.view.templateRootPath}
-		partialRootPath = {$plugin.tx_pubmanimporter.view.partialRootPath}
-		layoutRootPath = {$plugin.tx_pubmanimporter.view.layoutRootPath}
-	}
-	persistence {
-		storagePid = {$plugin.tx_pubmanimporter.persistence.storagePid}
-	}
-	features {
-		# uncomment the following line to enable the new Property Mapper.
-		# rewrittenPropertyMapper = 1
-	}
+        escidocContentModelObjid = escidoc:2001
+        escidocContextObjid = ubl:10444
+
+        sortKeys = escidoc.publication.source.issue
+        sortOrder = ascending
+    }
+
+    view {
+        templateRootPath = {$plugin.tx_pubmanimporter.view.templateRootPath}
+        partialRootPath = {$plugin.tx_pubmanimporter.view.partialRootPath}
+        layoutRootPath = {$plugin.tx_pubmanimporter.view.layoutRootPath}
+    }
+
+    persistence {
+        storagePid = {$plugin.tx_pubmanimporter.persistence.storagePid}
+    }
+
+    features {
+        # uncomment the following line to enable the new Property Mapper.
+        # rewrittenPropertyMapper = 1
+    }
 }
 
 plugin.tx_pubmanimporter._CSS_DEFAULT_STYLE (
-	textarea.f3-form-error {
-		background-color:#FF9F9F;
-		border: 1px #FF0000 solid;
-	}
 
-	input.f3-form-error {
-		background-color:#FF9F9F;
-		border: 1px #FF0000 solid;
-	}
+  ul, ol, li, dl, dt, dd {
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
 
-	.tx-pubman-importer table {
-		border-collapse:separate;
-		border-spacing:10px;
-	}
+  li {
+    display: list-item;
+    margin-left: 2em;
+  }
 
-	.tx-pubman-importer table th {
-		font-weight:bold;
-	}
+  textarea.f3-form-error {
+    background-color:#FF9F9F;
+    border: 1px #FF0000 solid;
+  }
 
-	.tx-pubman-importer table td {
-		vertical-align:top;
-	}
+  input.f3-form-error {
+    background-color:#FF9F9F;
+    border: 1px #FF0000 solid;
+  }
 
-	.typo3-messages .message-error {
-		color:red;
-	}
+  .tx-pubman-importer table {
+    border-collapse:separate;
+    border-spacing:10px;
+  }
 
-	.typo3-messages .message-ok {
-		color:green;
-	}
+  .tx-pubman-importer table th {
+    font-weight:bold;
+  }
+
+  .tx-pubman-importer table td {
+    vertical-align:top;
+  }
+
+  .typo3-messages .message-error {
+    color:red;
+  }
+
+  .typo3-messages .message-ok {
+    color:green;
+  }
+
+  .abstract {
+    font-style: italic;
+  }
+
+  .title a {
+    font-weight: bold;
+  }
+
+  .creators ul {
+    list-style-type: none;
+   }
+
+  .PMIToggle.truncate {
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+  }
+  .article {
+     padding-top: 1em;
+  }
+
+  .creators li {
+    margin-left: 0;
+  }
 
 )
+
+page.includeJS {
+    jquery = EXT:pubman_importer/Resources/Public/JavaScript/jquery-1.11.3.js
+    socialshareprivacy = EXT:pubman_importer/Resources/Public/JavaScript/jquery.socialshareprivacy.js
+    pubman_importer = EXT:pubman_importer/Resources/Public/JavaScript/main.js
+}

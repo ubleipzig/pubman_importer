@@ -30,9 +30,14 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * The repository for Organizations
  */
-class JournalRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\PMIRepository {
+class JournalRepository extends ItemRepository {
 
-    protected $_escidocPublicationType = 'http://purl.org/escidoc/metadata/ves/publication-types/journal';
+    protected $_cqlQueryPattern = [
+        'all' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.type="http://purl.org/escidoc/metadata/ves/publication-types/journal"',
+        'byPid' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND (escidoc.any-identifier="%3$s" NOT escidoc.objid="%3$s")',
+        'byUid' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.objid="%3$s" AND escidoc.publication.type="http://purl.org/escidoc/metadata/ves/publication-types/journal"',
+        'byCreator' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.creator.person.organization.identifier="%3$s"',
+    ];
 
     public function __construct() {
         return call_user_func_array(array('parent', '__construct'), func_get_args());

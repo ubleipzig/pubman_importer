@@ -1,60 +1,31 @@
 <f:layout name="Default"/>
+
 <f:section name="main">
-<!--    <f:debug>{Article}</f:debug> -->
-    <h3>{Article.identifier}</h3>
+    <h3>{Article.title}</h3>
 
-    <h2>{Article.title}</h2>
-
-    <div class="author">
-        <f:for each="{Article.creator}" as="Creator" iteration="itemIteration">{Creator.givenName} {Creator.familyName}
-            <f:if condition="{itemIteration.isLast}">
-                <f:then></f:then>
-                <f:else>,</f:else>
-            </f:if>
-            <f:if condition="{Creator.article}">
-                <div class="title">
-                    <ul>
-                        <f:for each="{Creator.article}" as="CreatorArticle">
-                            <li><f:link.action action="show" arguments="{Article: CreatorArticle}">{CreatorArticle.title}</f:link.action></li>
-                        </f:for>
-                    </ul>
-                </div>
-            </f:if>
-        </f:for>
+    <div class="creators">
+        <h4><f:translate key="author">Author</f:translate>:</h4>
+        <f:render partial="Creator/List" arguments="{Creators: Article.creator}"/>
     </div>
-    <p>
-    </p>
-    <p>
-        <f:for each="{Article.component}" as="Component" iteration="ItemIteration">
-            <f:if condition="{ItemIteration.isFirst}">
-                <f:then>Volltext:</f:then>
-                <f:else> |</f:else>
-            </f:if>
-            <f:if condition="{Component.mimeType} == 'application/pdf'">
-                <f:link.action action="stream" controller="Content" arguments="{Component: Component, Article: Article}">PDF
-                </f:link.action>
-            </f:if>
-            <f:if condition="{Component.mimeType} == 'application/xml'">
-                <f:link.action action="show" controller="Content"
-                               arguments="{Component: Component, Article: Article, Issue: Issue, Journal: Journal, Context: Context}">
-                    HTML
-                </f:link.action>
-            </f:if>
-        </f:for>
-    </p>
+
+    <f:if condition="{Article.abstract}">
+        <h4><f:translate key="abstract">Abstract</f:translate>:</h4>
+        <div class="abstract">{Article.abstract}</div>
+        </div>
+    </f:if>
+
+    <f:if condition="{Article.component}">
+        <div class="components">
+            <h4><f:translate key="fulltext">Fulltext</f:translate>:</h4>
+            <f:render partial="Component/List" arguments="{Components: Article.component, Item: Article, Article: Article, Issue: Issue, Journal: Journal, Contex:Context}"/>
+        </div>
+    </f:if>
+
+    <div class="social">
+        <f:render partial="SocialSharePrivacy" arguments="{RequestUri: RequestUri}"/>
+    </div>
+
     <div class="navigation">
-        <f:if condition="{Issue}">
-            <f:link.action action="show" controller="Issue"
-                           arguments="{Issue: Issue, Journal: Journal, Context: Context}">back to Issue
-            </f:link.action>
-            <br/></f:if>
-        <f:if condition="{Journal}">
-            <f:link.action action="show" controller="Journal" arguments="{Journal: Journal, Context: Context}">back to
-                Journal
-            </f:link.action>
-            <br/></f:if>
-        <f:if condition="{Context}">
-            <f:link.action action="list" controller="Journal">back to all Journals</f:link.action>
-            <br/></f:if>
+        <f:render partial="Navigation" arguments="{Issue: Issue, Journal: Journal: Context: Context}"/>
     </div>
 </f:section>

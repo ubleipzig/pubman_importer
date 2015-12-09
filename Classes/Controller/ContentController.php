@@ -32,12 +32,12 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Controller;
 class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 
     /**
-     * ArticleRepository
+     * ItemRepository
      *
-     * @var \LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\ArticleRepository
+     * @var \LeipzigUniversityLibrary\PubmanImporter\Domain\Repository\ItemRepository
      * @inject
      */
-    protected $ArticleRepository = NULL;
+    protected $ItemRepository = NULL;
 
     /**
      * ContentRepository
@@ -62,17 +62,18 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * action show
      *
      * @param string $Component
+     * @param string $Item
      * @param string $Article
      * @param string $Issue
      * @param string $Journal
      * @param string $Context
      * @return void
      */
-    public function showAction($Component, $Article, $Issue = false, $Journal = false, $Context = false) {
-        $Article = $this->ArticleRepository->findByUid($Article);
+    public function showAction($Component, $Item, $Article = false, $Issue = false, $Journal = false, $Context = false) {
+        $Item = $this->ItemRepository->findByUid($Item);
         $this->ContentRepository->setBaseUri($this->request->getRequestUri());
 
-        foreach ($Article->getComponent() as $component) {
+        foreach ($Item->getComponent() as $component) {
             if ($component->getUid() !== $Component) continue;
             $component->setContent($this->ContentRepository->findByComponent($component));
             $Component = $component;
@@ -80,6 +81,7 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         }
 
         $this->view->assign('Component', $Component);
+        $this->view->assign('Item', $Item);
         $this->view->assign('Article', $Article);
         $this->view->assign('Issue', $Issue);
         $this->view->assign('Journal', $Journal);
@@ -90,12 +92,12 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * action stream
      *
      * @param string $Component
-     * @param string $Article
+     * @param string $Item
      */
-    public function streamAction($Component, $Article) {
-        $Article = $this->ArticleRepository->findByUid($Article);
+    public function streamAction($Component, $Item) {
+        $Item = $this->ItemRepository->findByUid($Item);
 
-        foreach ($Article->getComponent() as $component) {
+        foreach ($Item->getComponent() as $component) {
             if ($component->getUid() !== $Component) continue;
             $component->setContent($this->ContentRepository->findByComponent($component));
             $this->response->setHeader('Content-Type', 'application/pdf');

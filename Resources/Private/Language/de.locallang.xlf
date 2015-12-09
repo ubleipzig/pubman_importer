@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file target-language="de" datatype="plaintext" original="messages" date="2015-08-21T14:18:25Z" product-name="pubman_importer">
+		<header/>
+		<body>
+			<trans-unit id="issue">
+				<target>Ausgabe</target>
+			</trans-unit>
+			<trans-unit id="year">
+				<target>Jahr</target>
+			</trans-unit>
+			<trans-unit id="author">
+				<target>Autor</target>
+			</trans-unit>
+			<trans-unit id="abstract">
+				<target>Abstract</target>
+			</trans-unit>
+			<trans-unit id="fulltext">
+				<target>Volltext</target>
+			</trans-unit>
+			<trans-unit id="issued_in_year">
+				<target>herausgegeben im Jahr %s</target>
+			</trans-unit>
+			<trans-unit id="back_to_journal">
+				<target>zurück zur Zeitschrift</target>
+			</trans-unit>
+			<trans-unit id="back_to_issue">
+				<target>zurück zur Ausgabe</target>
+			</trans-unit>
+			<trans-unit id="back_to_article">
+				<target>zurück zum Artikel</target>
+			</trans-unit>
+			<trans-unit id="keywords">
+				<target>Schlüsselwörter</target>
+			</trans-unit>
+			<trans-unit id="license">
+				<target>Lizenz</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

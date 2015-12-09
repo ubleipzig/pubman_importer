@@ -53,9 +53,7 @@ class JournalController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @return void
      */
     public function listAction() {
-        $this->settings;
-
-        $this->JournalRepository->setOptions($this->settings);
+        $this->settings && $this->JournalRepository->setOptions($this->settings);
 
         $Journals = $this->JournalRepository->findAll();
 
