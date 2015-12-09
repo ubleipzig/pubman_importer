@@ -40,17 +40,6 @@ class ArticleController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
     protected $ArticleRepository = NULL;
 
     /**
-     * action list
-     *
-     * @param string $Issue
-     * @return void
-     */
-    public function listAction($Issue) {
-        $Articles = $this->ArticleRepository->findByPid($Issue);
-        $this->view->assign('Articles', $Articles);
-    }
-
-    /**
      * action show
      *
      * @param string $Article

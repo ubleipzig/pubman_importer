@@ -48,17 +48,6 @@ class IssueController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     protected $ArticleRepository = NULL;
 
     /**
-     * action list
-     *
-     * @param string $Journal
-     * @return void
-     */
-    public function listAction($Journal) {
-        $Issues = $this->IssueRepository->findByPid($Journal);
-        $this->view->assign('Issues', $Issues);
-    }
-
-    /**
      * action show
      *
      * @param string $Issue

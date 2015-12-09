@@ -48,17 +48,6 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
     protected $ContentRepository = NULL;
 
     /**
-     * action list
-     *
-     * @param string $Component
-     * @return void
-     */
-    public function listAction($Component) {
-        $Components = $this->ContentRepository->findByComponent($Component);
-        $this->view->assign('Components', $Components);
-    }
-
-    /**
      * action show
      *
      * @param string $Component

@@ -78,7 +78,7 @@ plugin.tx_pubmanimporter._CSS_DEFAULT_STYLE (
     font-weight: bold;
   }
 
-  .creators ul {
+  .creators ul, .navigation ul, .components ul {
     list-style-type: none;
    }
 
@@ -89,10 +89,10 @@ plugin.tx_pubmanimporter._CSS_DEFAULT_STYLE (
     -ms-text-overflow: ellipsis;
   }
   .article {
-     padding-top: 1em;
+     padding-bottom: 1em;
   }
 
-  .creators li {
+  .creators li, .navigation li, .components li {
     margin-left: 0;
   }
 

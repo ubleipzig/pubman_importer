@@ -78,5 +78,4 @@ class JournalController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $this->view->assign('Journal', $Journal);
         $this->view->assign('Context', $Context);
     }
-
 }
