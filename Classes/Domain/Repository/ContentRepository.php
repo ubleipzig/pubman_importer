@@ -40,6 +40,13 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
     protected $baseUri;
 
     /**
+     * the settings to
+     *
+     * @var array
+     */
+    protected $_teiConverter = [];
+
+    /**
      * constructor
      */
     public function __construct()
@@ -75,8 +82,8 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
     public function findByComponent($component)
     {
         if ($component->getMimeType() === 'application/xml') {
-            $this->_url = 'https://docker.ub.intern.uni-leipzig.de';
-            $this->_path = '/tei-converter/html/to.xsl';
+            $this->_url = $this->_teiConverter['url'];
+            $this->_path = $this->_teiConverter['path'];
             $this->setOptions([
                 'querySettings' => ['uri' => $component->getHref()]
             ]);

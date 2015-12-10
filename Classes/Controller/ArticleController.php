@@ -49,6 +49,8 @@ class ArticleController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @return void
      */
     public function showAction($Article, $Issue = false, $Journal = false, $Context = false) {
+        $this->ArticleRepository->setOptions($this->settings);
+
         $Article = $this->ArticleRepository->findByUid($Article);
 
         if ($Issue) $Article->setPid($Issue);

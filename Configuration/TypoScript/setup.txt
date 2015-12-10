@@ -6,8 +6,10 @@ plugin.tx_pubmanimporter {
         escidocContentModelObjid = escidoc:2001
         escidocContextObjid = ubl:10444
 
-        sortKeys = escidoc.publication.source.issue
-        sortOrder = ascending
+        teiConverter {
+            url = https://docker.ub.intern.uni-leipzig.de
+            path = /tei-converter/html/to.xsl
+        }
     }
 
     view {

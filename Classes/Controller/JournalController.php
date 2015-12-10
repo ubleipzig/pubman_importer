@@ -53,12 +53,16 @@ class JournalController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @return void
      */
     public function listAction() {
-        $this->settings && $this->JournalRepository->setOptions($this->settings);
+        $this->JournalRepository->setOptions($this->settings);
 
-        $Journals = $this->JournalRepository->findAll();
+        try {
+            $Journals = $this->JournalRepository->findAll();
 
-        if (count($Journals) === 1) $this->redirect('show', NULL, NULL, ['Journal' => $Journals[0], 'multipleJournals' => false]);
-        else $this->view->assign('Journals', $Journals);
+            if (count($Journals) === 1) $this->redirect('show', NULL, NULL, ['Journal' => $Journals[0], 'multipleJournals' => false]);
+            else $this->view->assign('Journals', $Journals);
+        } catch (\Exception $e) {
+            $this->view->assign('Error', $e);
+        }
     }
 
     /**
@@ -69,13 +73,21 @@ class JournalController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @return void
      */
     public function showAction($Journal, $Context = false) {
-        $Journal = $this->JournalRepository->findByUid($Journal);
+        $this->JournalRepository->setOptions($this->settings);
+        $this->IssueRepository->setOptions($this->settings);
 
-        foreach ($this->IssueRepository->findByPid($Journal) as $Issue) {
-            $Journal->addIssue($Issue);
+        try {
+            $Journal = $this->JournalRepository->findByUid($Journal);
+
+            foreach ($this->IssueRepository->findByPid($Journal) as $Issue) {
+                $Journal->addIssue($Issue);
+            }
+            $this->view->assign('Journal', $Journal);
+
+        } catch(\Exception $e) {
+            $this->view->assign('Error', $e);
         }
 
-        $this->view->assign('Journal', $Journal);
         $this->view->assign('Context', $Context);
     }
 }

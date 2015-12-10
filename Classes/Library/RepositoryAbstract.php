@@ -9,14 +9,14 @@ abstract class RepositoryAbstract
      *
      * @var string
      */
-    protected $_escidocContentModelObjid = 'escidoc:2001';
+    protected $_escidocContentModelObjid;
 
     /**
      * the context object id
      *
      * @var string
      */
-    protected $_escidocContextObjid = 'ubl:10444';
+    protected $_escidocContextObjid;
 
     /**
      * the cql-query patterns for getting the expected item(s)
@@ -76,21 +76,21 @@ abstract class RepositoryAbstract
      *
      * @var string
      */
-    protected $_url = 'https://publishing.ub.uni-leipzig.de';
+    protected $_url;
 
     /**
      * the path part of the uri
      *
      * @var string
      */
-    protected $_path = '/search/SearchAndExport';
+    protected $_path;
 
     /**
      * the query part of the uri
      *
      * @var string
      */
-    protected $_query = '';
+    protected $_query;
 
     /**
      * the parsed xml dom document

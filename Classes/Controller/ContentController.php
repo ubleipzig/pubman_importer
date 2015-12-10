@@ -59,18 +59,26 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @return void
      */
     public function showAction($Component, $Item, $Article = false, $Issue = false, $Journal = false, $Context = false) {
-        $Item = $this->ItemRepository->findByUid($Item);
+        $this->ItemRepository->setOptions($this->settings);
+        $this->ContentRepository->setOptions($this->settings);
         $this->ContentRepository->setBaseUri($this->request->getRequestUri());
 
-        foreach ($Item->getComponent() as $component) {
-            if ($component->getUid() !== $Component) continue;
-            $component->setContent($this->ContentRepository->findByComponent($component));
-            $Component = $component;
-            break;
+        try {
+            $Item = $this->ItemRepository->findByUid($Item);
+
+            foreach ($Item->getComponent() as $component) {
+                if ($component->getUid() !== $Component) continue;
+                $component->setContent($this->ContentRepository->findByComponent($component));
+                $Component = $component;
+                break;
+            }
+
+            $this->view->assign('Component', $Component);
+            $this->view->assign('Item', $Item);
+        } catch (\Exception $e) {
+            $this->view->assign('Error', $e);
         }
 
-        $this->view->assign('Component', $Component);
-        $this->view->assign('Item', $Item);
         $this->view->assign('Article', $Article);
         $this->view->assign('Issue', $Issue);
         $this->view->assign('Journal', $Journal);
@@ -84,15 +92,22 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * @param string $Item
      */
     public function streamAction($Component, $Item) {
-        $Item = $this->ItemRepository->findByUid($Item);
+        $this->ItemRepository->setOptions($this->settings);
+        $this->ContentRepository->setOptions($this->settings);
 
-        foreach ($Item->getComponent() as $component) {
-            if ($component->getUid() !== $Component) continue;
-            $component->setContent($this->ContentRepository->findByComponent($component));
-            $this->response->setHeader('Content-Type', 'application/pdf');
-            $this->response->setContent($component->getContent());
-            $this->response->send();
-            exit;
+        try {
+            $Item = $this->ItemRepository->findByUid($Item);
+
+            foreach ($Item->getComponent() as $component) {
+                if ($component->getUid() !== $Component) continue;
+                $component->setContent($this->ContentRepository->findByComponent($component));
+                $this->response->setHeader('Content-Type', 'application/pdf');
+                $this->response->setContent($component->getContent());
+                $this->response->send();
+                exit;
+            }
+        }catch (\Exception $e) {
+            $this->view->assign('Error', $e);
         }
     }
 }

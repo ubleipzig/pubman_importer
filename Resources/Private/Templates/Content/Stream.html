@@ -1,0 +1,7 @@
+<f:layout name="Default"/>
+<f:section name="main">
+    <f:flashMessages renderMode="div"/>
+    <f:if condition="{Error}">
+        <f:render partial="Error" arguments="{Error: Error}"/>
+    </f:if>
+</f:section>

@@ -1,35 +1,51 @@
-
-<f:layout name="Default" />
+<f:layout name="Default"/>
 <f:section name="main">
-<f:flashMessages renderMode="div" />
+    <f:flashMessages renderMode="div"/>
+    <f:if condition="{Error}">
+        <f:then>
+            <f:render partial="Error" arguments="{Error: Error}"/>
+        </f:then>
+        <f:else>
 
-  <h3>{Item.title}</h3>
-  <div class="creators">
-    <h4><f:translate key="author">Author</f:translate>:</h4>
-    <f:render partial="Creator/List" arguments="{Creators: Item.creator}"/>
-  </div>
+            <h3>{Item.title}</h3>
 
-  <f:if condition="{Item.abstract}">
-    <h4><f:translate key="abstract">Abstract</f:translate>:</h4>
-    <div class="abstract">{Item.abstract}</div>
-  </f:if>
+            <div class="creators">
+                <h4>
+                    <f:translate key="author">Author</f:translate>:
+                </h4>
+                <f:render partial="Creator/List" arguments="{Creators: Item.creator}"/>
+            </div>
 
-  <f:if condition="{Item.subject}">
-    <h4><f:translate key="keywords">Keywords</f:translate>:</h4>
-    <div class="keywords">{Item.subject}</div>
-  </f:if>
+            <f:if condition="{Item.abstract}">
+                <h4>
+                    <f:translate key="abstract">Abstract</f:translate>:
+                </h4>
+                <div class="abstract">{Item.abstract}</div>
+            </f:if>
 
-  <f:if condition="{Component.license}">
-    <h4><f:translate key="license">License</f:translate>:</h4>
-    <a href="{Component.license}">{Component.license}</a>
-  </f:if>
+            <f:if condition="{Item.subject}">
+                <h4>
+                    <f:translate key="keywords">Keywords</f:translate>:
+                </h4>
+                <div class="keywords">{Item.subject}</div>
+            </f:if>
 
-  <div class="fulltext">
-    <f:format.raw>{Component.content}</f:format.raw>
-  </div>
+            <f:if condition="{Component.license}">
+                <h4>
+                    <f:translate key="license">License</f:translate>:
+                </h4>
+                <a href="{Component.license}">{Component.license}</a>
+            </f:if>
 
-  <div class="navigation">
-    <f:render partial="Navigation" arguments="{Article: Article, Issue: Issue, Journal: Journal: Context: Context}"/>
-  </div>
+            <div class="fulltext">
+                <f:format.raw>{Component.content}</f:format.raw>
+            </div>
+        </f:else>
+    </f:if>
+
+    <div class="navigation">
+        <f:render partial="Navigation"
+                  arguments="{Article: Article, Issue: Issue, Journal: Journal: Context: Context}"/>
+    </div>
 
 </f:section>
