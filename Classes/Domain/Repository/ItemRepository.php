@@ -28,16 +28,18 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  ***************************************************************/
 
 /**
- * The repository for Organizations
+ * The repository for items
  */
-class ItemRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\PMIRepository
+class ItemRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\RepositoryAbstract
 {
 
-    public function __construct()
-    {
-        return call_user_func_array(array('parent', '__construct'), func_get_args());
-    }
-
+    /**
+     * extracts component specific information from dom
+     *
+     * @param \DOMNodeList $nodeList
+     * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Item $model
+     * @return $this
+     */
     public function parseComponents($nodeList, $model) {
         foreach ($nodeList as $node) {
             $component = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component');
@@ -58,6 +60,13 @@ class ItemRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\PM
         return $this;
     }
 
+    /**
+     * extracts creator specific information from dom
+     *
+     * @param \DOMNodeList $nodeList
+     * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Item $model
+     * @return $this
+     */
     public function parseCreators($nodeList, $model) {
         foreach ($nodeList as $node) {
             $creator = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Creator');
@@ -73,6 +82,13 @@ class ItemRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\PM
         return $this;
     }
 
+    /**
+     * extracts generic information from dom
+     *
+     * @param \DOMNode $node
+     * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Item $model
+     * @return $this
+     */
     public function parseGenerics($node, $model) {
         $this->_publicationNode = $this->_xpath->query('escidocMetadataRecords:md-records/escidocMetadataRecords:md-record/publication:publication', $node)->item(0);
 
@@ -92,6 +108,13 @@ class ItemRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\PM
         return $this;
     }
 
+    /**
+     * extracts information from the dom
+     *
+     * @param bool|false $pid
+     * @return array
+     * @throws \Exception
+     */
     public function parse($pid = false)
     {
         $this->parseXml();

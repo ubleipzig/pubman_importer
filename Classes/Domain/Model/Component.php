@@ -29,88 +29,71 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Component
  */
-class Component extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class Component extends \LeipzigUniversityLibrary\PubmanImporter\Library\ItemAbstract
 {
-
+    /**
+     * the content of the component
+     *
+     * @var string
+     */
     protected $content;
 
+    /**
+     * the url to the component content
+     *
+     * @var string
+     */
     protected $url;
 
+    /**
+     * the path to the component content
+     *
+     * @var string
+     */
     protected $path;
 
+    /**
+     * the filename of the component
+     *
+     * @var string
+     */
     protected $fileName;
 
+    /**
+     * the mime type of the component
+     *
+     * @var string
+     */
     protected $mimeType;
 
+    /**
+     * the license of the component
+     *
+     * @var string
+     */
     protected $license;
 
+    /**
+     * the storage type of the component
+     *
+     * @var string
+     */
     protected $storage;
 
-    public function setContent($value) {
-        $this->content = $value;
+    /**
+     * no storage objects to initialize for this model
+     *
+     * @return void
+     */
+    protected function initStorageObjects() {
+        return;
     }
 
-    public function getContent() {
-        return $this->content;
-    }
-
-    public function setMimeType($value)
-    {
-        $this->mimeType = $value;
-    }
-
-    public function getMimeType() {
-        return $this->mimeType;
-    }
-
-    public function setFileName($value) {
-        $this->fileName = $value;
-    }
-
-    public function getFileName() {
-        return $this->fileName;
-    }
-
-    public function setLicense($value) {
-        $this->license = $value;
-    }
-
-    public function getLicense() {
-        return $this->license;
-    }
-
-    public function setStorage($value) {
-        $this->storage = $value;
-    }
-
-    public function getStorage() {
-        return $this->storage;
-    }
-
-    public function setUid($value) {
-        $this->uid = $value;
-    }
-
-    public function getUid() {
-        return $this->uid;
-    }
-
-    public function setUrl($value) {
-        $this->url = $value;
-    }
-
-    public function getUrl() {
-        return $this->url;
-    }
-
-    public function setPath($value) {
-        $this->path = $value;
-    }
-
-    public function getPath() {
-        return $this->path;
-    }
-
+    /**
+     * returns the href based on url and path
+     *
+     * @return string
+     */
     public function getHref() {
         return $this->getUrl() . $this->getPath();
     }

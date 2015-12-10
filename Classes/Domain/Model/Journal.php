@@ -1,7 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 
-
 /***************************************************************
  *
  *  Copyright notice
@@ -72,24 +71,5 @@ class Journal extends Item {
 	 */
 	public function removeIssue(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Issue $issueToRemove) {
 		$this->issue->detach($issueToRemove);
-	}
-
-	/**
-	 * Returns the issue
-	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Issue> $issue
-	 */
-	public function getIssue() {
-		return $this->issue;
-	}
-
-	/**
-	 * Sets the issue
-	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Issue> $issue
-	 * @return void
-	 */
-	public function setIssue(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $issue) {
-		$this->issue = $issue;
 	}
 }

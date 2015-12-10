@@ -1,7 +1,6 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 
-
     /***************************************************************
      *
      *  Copyright notice
@@ -30,7 +29,7 @@ namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 /**
  * Item
  */
-class Item extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Item extends \LeipzigUniversityLibrary\PubmanImporter\Library\ItemAbstract {
 
     /**
      * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
@@ -109,14 +108,6 @@ class Item extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 
     /**
-     * __construct
-     */
-    public function __construct() {
-        //Do not remove the next line: It would break the functionality
-        $this->initStorageObjects();
-    }
-
-    /**
      * Initializes all ObjectStorage properties
      * Do not modify this method!
      * It will be rewritten on each save in the extension builder
@@ -150,25 +141,6 @@ class Item extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     }
 
     /**
-     * Returns the creator
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Creator> $creator
-     */
-    public function getCreator() {
-        return $this->creator;
-    }
-
-    /**
-     * Sets the creator
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Creator> $creator
-     * @return void
-     */
-    public function setCreator(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $creator) {
-        $this->creator = $creator;
-    }
-
-    /**
      * Adds a Component
      *
      * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component $component
@@ -186,105 +158,5 @@ class Item extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      */
     public function removeComponent(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component $componentToRemove) {
         $this->component->detach($componentToRemove);
-    }
-
-    /**
-     * Returns the component
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component> $component
-     */
-    public function getComponent() {
-        return $this->component;
-    }
-
-    /**
-     * Sets the component
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component> $component
-     * @return void
-     */
-    public function setComponent(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $component) {
-        $this->component = $component;
-    }
-
-    public function setUid($uid) {
-        $this->uid = $uid;
-    }
-
-    public function getUid() {
-        return $this->uid;
-    }
-
-    public function setPid($pid) {
-        $this->pid = $pid;
-    }
-
-    public function getPid() {
-        return $this->pid;
-    }
-
-    public function setTitle($value) {
-        $this->title = $value;
-    }
-
-    public function getTitle() {
-        return $this->title;
-    }
-
-    public function setReleaseDate($value) {
-        $this->releaseDate = $value;
-    }
-
-    public function getReleaseDate() {
-        return $this->releaseDate;
-    }
-
-    public function setPublisher($value) {
-        $this->publisher = $value;
-    }
-
-    public function getPublisher() {
-        return $this->publisher;
-    }
-
-    public function setAbstract($value) {
-        $this->abstract = $value;
-    }
-
-    public function getAbstract() {
-        return $this->abstract;
-    }
-
-    public function setIdentifier($value) {
-        $this->identifier = $value;
-    }
-
-    public function getIdentifier() {
-        return $this->identifier;
-    }
-
-    public function setSubject($value) {
-        $this->subject = $value;
-    }
-
-    public function getSubject() {
-        return $this->subject;
-    }
-
-
-    public function setIssueTerm($value) {
-        $this->issueTerm = $value;
-    }
-
-    public function getIssueTerm() {
-        return $this->issueTerm;
-    }
-
-    public function setIssuedYear($value) {
-        $this->issuedYear = $value;
-    }
-
-    public function getIssuedYear() {
-        return $this->issuedYear;
     }
 }

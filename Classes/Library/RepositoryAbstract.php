@@ -2,13 +2,27 @@
 namespace LeipzigUniversityLibrary\PubmanImporter\Library;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
-abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\RepositoryInterface
+abstract class RepositoryAbstract
 {
-
+    /**
+     * the content model object id every item consists of
+     *
+     * @var string
+     */
     protected $_escidocContentModelObjid = 'escidoc:2001';
 
+    /**
+     * the context object id
+     *
+     * @var string
+     */
     protected $_escidocContextObjid = 'ubl:10444';
 
+    /**
+     * the cql-query patterns for getting the expected item(s)
+     *
+     * @var array
+     */
     protected $_cqlQueryPattern = [
         'all' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s"',
         'byPid' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND (escidoc.any-identifier="%3$s" NOT escidoc.objid="%3$s")',
@@ -16,41 +30,107 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         'byCreator' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.creator.person.organization.identifier="%3$s"',
     ];
 
+    /**
+     * the export format we parse
+     *
+     * @var string
+     */
     protected $_exportFormat = 'ESCIDOC_XML_V13';
 
+    /**
+     * the sort direction
+     *
+     * @var string
+     */
     protected $_sortOrder = 'descending';
 
+    /**
+     * the default sorting
+     *
+     * @var string
+     */
     protected $_sortKeys = 'sort.escidoc.property.latest-release.date';
 
+    /**
+     * the offset record
+     *
+     * @var string
+     */
     protected $_startRecord = '1';
 
+    /**
+     * the maximum count of records
+     *
+     * @var string
+     */
     protected $_maximumRecords = '5000';
 
+    /**
+     *
+     * @var array
+     */
     protected $_querySettings = [];
 
+    /**
+     * the scheme host port part of the uri
+     *
+     * @var string
+     */
     protected $_url = 'https://publishing.ub.uni-leipzig.de';
 
+    /**
+     * the path part of the uri
+     *
+     * @var string
+     */
     protected $_path = '/search/SearchAndExport';
 
+    /**
+     * the query part of the uri
+     *
+     * @var string
+     */
     protected $_query = '';
 
+    /**
+     * the parsed xml dom document
+     *
+     * @var \DomDocument
+     */
     protected $_domDocument;
 
+    /**
+     * the source xml string
+     *
+     * @var
+     */
     protected $_body;
 
+    /**
+     * the xpath object of $_domDocument
+     *
+     * @var \DOMXPath
+     */
     protected $_xpath;
 
+    /**
+     * the dom node for the publication element (since its used by multiple parsers)
+     *
+     * @var \DOMNode
+     */
     protected $_publicationNode;
 
-
     /**
+     * the http request object
+     * its not injected though
+     *
      * @var \TYPO3\CMS\Core\Http\HttpRequest
      * @inject
      */
     protected $_httpRequest;
 
     /**
-     * PMIRepository Constructor
+     * constructor
      */
     public function __construct()
     {
@@ -65,6 +145,11 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         $this->_httpRequest = GeneralUtility::makeInstance('\TYPO3\CMS\Core\Http\HttpRequest');
     }
 
+    /**
+     * overrides the property values from settings (injected by the controller's 'settings' property)
+     *
+     * @param $settings
+     */
     public function setOptions($settings) {
         foreach ($settings as $key => $value) {
             if (false === property_exists($this, '_' . $key)) continue;
@@ -74,85 +159,11 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
     }
 
     /**
-     * Adds an object to this repository.
-     *
-     * @param object $object The object to add
-     * @return void
-     * @api
-     */
-    public function add($object)
-    {
-        throw new \Exception(__METHOD__ . ' not implemented on readonly repository');
-    }
-
-    /**
-     * Removes an object from this repository.
-     *
-     * @param object $object The object to remove
-     * @return void
-     * @api
-     */
-    public function remove($object)
-    {
-        throw new \Exception(__METHOD__ . ' not implemented on readonly repository');
-    }
-
-    /**
-     * Replaces an existing object with the same identifier by the given object
-     *
-     * @param object $modifiedObject The modified object
-     * @api
-     */
-    public function update($modifiedObject)
-    {
-        throw new \Exception(__METHOD__ . ' not implemented on readonly repository');
-    }
-
-    /**
-     * Removes all objects of this repository as if remove() was called for
-     * all of them.
-     *
-     * @return void
-     * @api
-     */
-    public function removeAll()
-    {
-        throw new \Exception(__METHOD__ . ' not implemented on readonly repository');
-    }
-
-    /**
-     * Sets the default query settings to be used in this repository
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface $defaultQuerySettings The query settings to be used by default
-     * @return void
-     * @api
-     */
-    public function setDefaultQuerySettings(\TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface $defaultQuerySettings)
-    {
-        return $this;
-    }
-
-    /**
-     * Sets the property names to order the result by per default.
-     * Expected like this:
-     * array(
-     * 'foo' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING,
-     * 'bar' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
-     * )
-     *
-     * @param array $defaultOrderings The property names to order by
-     * @return void
-     * @api
-     */
-    public function setDefaultOrderings(array $defaultOrderings) {
-        var_dump($defaultOrderings);
-    }
-
-    /**
      * Returns a query for objects of this repository
      *
      * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
      * @api
+     * @throws \Exception if http request failed
      */
     public function execute()
     {
@@ -169,6 +180,11 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         return $this;
     }
 
+    /**
+     * parses the xml string into the dom document and its xpath handle
+     *
+     * @return $this
+     */
     public function parseXml() {
         $this->_domDocument = \DOMDocument::loadXML($this->_body);
         $this->_xpath = new \DOMXPath($this->_domDocument);
@@ -176,6 +192,11 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         return $this;
     }
 
+    /**
+     * creates a query string from the query settings
+     *
+     * @return $this
+     */
     public function createQuery()
     {
         $this->_query = http_build_query($this->_querySettings);
@@ -202,9 +223,10 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
     /**
      * Finds an object matching the given identifier.
      *
-     * @param integer $uid The identifier of the object to find
+     * @param int|\TYPO3\CMS\Extbase\DomainObject\AbstractEntity $id The identifier of the object to find
      * @return object The matching object if found, otherwise NULL
      * @api
+     * @throws \Exception
      */
     public function findByUid($id) {
         if ($id instanceof \TYPO3\CMS\Extbase\DomainObject\AbstractEntity) $id = $id->getUid();
@@ -219,6 +241,14 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         return  $this->execute()->parse()[0];
     }
 
+    /**
+     * Finds an object matching the given parent identifier.
+     *
+     * @param int|\TYPO3\CMS\Extbase\DomainObject\AbstractEntity $id The identifier of the parent object to find
+     * @return mixed
+     * @api
+     * @throws \Exception
+     */
     public function findByPid($id) {
         if ($id instanceof \TYPO3\CMS\Extbase\DomainObject\AbstractEntity) $id = $id->getUid();
 
@@ -232,6 +262,14 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
         return $this->execute()->parse($id);
     }
 
+    /**
+     * Finds an object matching the given creator identifier.
+     *
+     * @param int|\TYPO3\CMS\Extbase\DomainObject\AbstractEntity $id The identifier of the parent object to find
+     * @return mixed
+     * @api
+     * @throws \Exception
+     */
     public function findByCreator($id) {
         if ($id instanceof \TYPO3\CMS\Extbase\DomainObject\AbstractEntity) $id = $id->getUid();
 
@@ -256,23 +294,27 @@ abstract class PMIRepository implements \TYPO3\CMS\Extbase\Persistence\Repositor
     }
 
     /**
-     * Finds an object matching the given identifier.
+     * returns the url
      *
-     * @param mixed $identifier The identifier of the object to find
-     * @return object The matching object if found, otherwise NULL
-     * @api
+     * @return string
      */
-    public function findByIdentifier($uid) {
-        $this->findById($uid);
-    }
-
     public function getUrl() {
         return $this->_url;
     }
 
+    /**
+     * returns the body string
+     *
+     * @return mixed
+     */
     public function getBody() {
         return $this->_body;
     }
 
+    /**
+     * defines the parse method to must be implemented
+     *
+     * @return mixed
+     */
     abstract public function parse();
 }

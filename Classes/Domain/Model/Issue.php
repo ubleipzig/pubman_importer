@@ -72,23 +72,4 @@ class Issue extends Item {
     public function removeArticle(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article $articleToRemove) {
         $this->article->detach($articleToRemove);
     }
-
-    /**
-     * Returns the article
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article> $article
-     */
-    public function getArticle() {
-        return $this->article;
-    }
-
-    /**
-     * Sets the article
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article> $article
-     * @return void
-     */
-    public function setArticle(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $article) {
-        $this->article = $article;
-    }
 }

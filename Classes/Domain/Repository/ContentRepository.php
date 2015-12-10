@@ -1,6 +1,5 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Repository;
-
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
@@ -29,21 +28,39 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  ***************************************************************/
 
 /**
- * The repository for Organizations
+ * The repository for components content
  */
-class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\PMIRepository
+class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\RepositoryAbstract
 {
+    /**
+     * the base uri where the content relies
+     *
+     * @var
+     */
     protected $baseUri;
 
+    /**
+     * constructor
+     */
     public function __construct()
     {
         $this->_httpRequest = GeneralUtility::makeInstance('\TYPO3\CMS\Core\Http\HttpRequest');
     }
 
+    /**
+     * sets the base uri
+     *
+     * @param $value
+     */
     public function setBaseUri($value) {
         $this->baseUri = $value;
     }
 
+    /**
+     * returns the base uri
+     *
+     * @return mixed
+     */
     public function getBaseUri() {
         return $this->baseUri;
     }
@@ -51,13 +68,13 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
     /**
      * Finds an object matching the given identifier.
      *
-     * @param integer $uid The identifier of the object to find
+     * @param integer $component The identifier of the object to find
      * @return object The matching object if found, otherwise NULL
      * @api
      */
     public function findByComponent($component)
     {
-        if ($component->getMimetype() === 'application/xml') {
+        if ($component->getMimeType() === 'application/xml') {
             $this->_url = 'https://docker.ub.intern.uni-leipzig.de';
             $this->_path = '/tei-converter/html/to.xsl';
             $this->setOptions([
@@ -74,6 +91,11 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
         }
     }
 
+    /**
+     * extracts the content specific information
+     *
+     * @return string
+     */
     public function parse() {
         $this->_domDocument = \DOMDocument::loadHTML($this->_body);
         $this->_xpath = new \DOMXPath($this->_domDocument);
@@ -90,6 +112,11 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
 
     }
 
+    /**
+     * manipulates the anchors according to the base uri so that they work with a base-href element in html
+     *
+     * @return $this
+     */
     protected function manipulateHref() {
         foreach ($this->_xpath->query('//*[@href]') as $node) {
             $href = $node->getAttribute('href');
@@ -101,12 +128,23 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
         return $this;
     }
 
+    /**
+     * removes a node from dom
+     *
+     * @param string $xpath
+     * @return $this
+     */
     protected function removeNode($xpath) {
         $node = $this->_xpath->query($xpath)->item(0);
         $node && $node->parentNode->removeChild($node);
         return $this;
     }
 
+    /**
+     * returns the body as string
+     *
+     * @return string
+     */
     protected function getBodyContent() {
         $value = '';
 

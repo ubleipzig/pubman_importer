@@ -35,7 +35,7 @@ class Article extends Item {
      * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
      *      /publication:publication/source:source/eterms:start-page
      *
-     * @var string
+     * @var int
      */
     protected $startPage;
 
@@ -43,23 +43,8 @@ class Article extends Item {
      * /escidocItemList:item-list/escidocItem:item/escidocMetadataRecords:md-records/escidocMetadataRecords:md-record
      *      /publication:publication/source:source/eterms:end-page
      *
-     * @var string
+     * @var int
      */
     protected $endPage;
 
-    public function setStartPage($value) {
-        $this->startPage = $value;
-    }
-
-    public function getStartPage() {
-        return $this->startPage;
-    }
-
-    public function setEndPage($value) {
-        $this->endPage =$value;
-    }
-
-    public function getEndPage() {
-        return $this->endPage;
-    }
 }

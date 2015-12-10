@@ -28,10 +28,15 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  ***************************************************************/
 
 /**
- * The repository for Organizations
+ * The repository for journals
  */
 class JournalRepository extends ItemRepository {
 
+    /**
+     * the cql query patterns
+     *
+     * @var array
+     */
     protected $_cqlQueryPattern = [
         'all' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.type="http://purl.org/escidoc/metadata/ves/publication-types/journal"',
         'byPid' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND (escidoc.any-identifier="%3$s" NOT escidoc.objid="%3$s")',
@@ -39,22 +44,14 @@ class JournalRepository extends ItemRepository {
         'byCreator' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.creator.person.organization.identifier="%3$s"',
     ];
 
-    public function __construct() {
-        return call_user_func_array(array('parent', '__construct'), func_get_args());
-    }
-
     /**
-     * Finds an object matching the given identifier.
+     * extracts information from the dom
      *
-     * @param mixed $identifier The identifier of the object to find
-     * @return object The matching object if found, otherwise NULL
-     * @api
+     * @param bool|false $pid
+     * @return array
+     * @throws \Exception
      */
-    public function findByIdentifier($id) {
-        $this->findById($id);
-    }
-
-    public function parse($id = false) {
+    public function parse($pid = false) {
         $this->parseXml();
 
         if (0 === (int)$this->countAll()) {
@@ -68,7 +65,7 @@ class JournalRepository extends ItemRepository {
 
             $this->parseGenerics($itemNode, $model);
 
-            if ($id) $model->setPid($id);
+            if ($pid) $model->setPid($pid);
 
             $result[] = $model;
         }

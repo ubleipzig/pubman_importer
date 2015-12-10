@@ -28,10 +28,22 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  ***************************************************************/
 
 /**
- * The repository for Organizations
+ * The repository for issues
  */
 class IssueRepository extends ItemRepository {
 
+    /**
+     * the default sorting
+     *
+     * @var string
+     */
+    protected $_sortKeys = 'sort.escidoc.publication.issued';
+
+    /**
+     * the cql query patterns
+     *
+     * @var array
+     */
     protected $_cqlQueryPattern = [
         'all' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.type="http://purl.org/escidoc/metadata/ves/publication-types/issue"',
         'byPid' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND (escidoc.any-identifier="%3$s" NOT escidoc.objid="%3$s")',
@@ -39,12 +51,14 @@ class IssueRepository extends ItemRepository {
         'byCreator' => 'escidoc.objecttype="item" AND escidoc.content-model.objid="%1$s" AND escidoc.context.objid="%2$s" AND escidoc.publication.creator.person.organization.identifier="%3$s"',
     ];
 
-    public function __construct() {
-        $this->_sortKeys = 'sort.escidoc.publication.issued';
-        return call_user_func_array(array('parent', '__construct'), func_get_args());
-    }
-
-    public function parse($id = false) {
+    /**
+     * extracts information from the dom
+     *
+     * @param bool|false $pid
+     * @return array
+     * @throws \Exception
+     */
+    public function parse($pid = false) {
         $this->parseXml();
 
         if (0 === (int)$this->countAll()) {
@@ -59,7 +73,7 @@ class IssueRepository extends ItemRepository {
             $this->parseGenerics($itemNode, $model);
 
             $this->parseIssue($this->_publicationNode, $model);
-            if ($id) $model->setPid($id);
+            if ($pid) $model->setPid($pid);
 
             $result[] = $model;
         }
@@ -68,6 +82,13 @@ class IssueRepository extends ItemRepository {
 
     }
 
+    /**
+     * extracts issue specific information from dom
+     *
+     * @param $node
+     * @param $model
+     * @return $this
+     */
     public function parseIssue($node, $model) {
         $model->setIdentifier($this->_xpath->query('source:source/dc:identifier[@xsi:type="eterms:URI"]', $node)->item(0)->nodeValue);
 

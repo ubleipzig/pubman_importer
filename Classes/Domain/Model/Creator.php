@@ -1,48 +1,84 @@
 <?php
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Model;
 
-/***************************************************************
- *
- *  Copyright notice
- *
- *  (c) 2014
- *
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+    /***************************************************************
+     *
+     *  Copyright notice
+     *
+     *  (c) 2014
+     *
+     *  All rights reserved
+     *
+     *  This script is part of the TYPO3 project. The TYPO3 project is
+     *  free software; you can redistribute it and/or modify
+     *  it under the terms of the GNU General Public License as published by
+     *  the Free Software Foundation; either version 3 of the License, or
+     *  (at your option) any later version.
+     *
+     *  The GNU General Public License can be found at
+     *  http://www.gnu.org/copyleft/gpl.html.
+     *
+     *  This script is distributed in the hope that it will be useful,
+     *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+     *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     *  GNU General Public License for more details.
+     *
+     *  This copyright notice MUST APPEAR in all copies of the script!
+     ***************************************************************/
 
 /**
- * Component
+ * Creator
  */
-class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Creator extends \LeipzigUniversityLibrary\PubmanImporter\Library\ItemAbstract
+{
 
-	protected $familyName;
+    /**
+     * family name of the creator
+     *
+     * @var string
+     */
+    protected $familyName;
 
+    /**
+     * first name of the creator
+     *
+     * @var string
+     */
     protected $givenName;
 
+    /**
+     * organization the creator is associated with
+     *
+     * @var string
+     */
     protected $organization;
 
+    /**
+     * address of the creator
+     *
+     * @var string
+     */
     protected $address;
 
+    /**
+     * the scheme, host, port part of uri to the creator's page
+     *
+     * @var string
+     */
     protected $url;
 
+    /**
+     * the path part of the uri to the creator's page
+     *
+     * @var string
+     */
     protected $path;
 
+    /**
+     * the position within the associated organization
+     *
+     * @var string
+     */
     protected $position;
 
     /**
@@ -54,14 +90,6 @@ class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     protected $article = NULL;
 
     /**
-     * __construct
-     */
-    public function __construct() {
-        //Do not remove the next line: It would break the functionality
-        $this->initStorageObjects();
-    }
-
-    /**
      * Initializes all ObjectStorage properties
      * Do not modify this method!
      * It will be rewritten on each save in the extension builder
@@ -69,7 +97,8 @@ class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      *
      * @return void
      */
-    protected function initStorageObjects() {
+    protected function initStorageObjects()
+    {
         $this->article = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
@@ -79,7 +108,8 @@ class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article $article
      * @return void
      */
-    public function addArticle(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article $article) {
+    public function addArticle(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article $article)
+    {
         $this->article->attach($article);
     }
 
@@ -89,70 +119,18 @@ class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      * @param \LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article $articleToRemove The Article to be removed
      * @return void
      */
-    public function removeArticle(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article $articleToRemove) {
+    public function removeArticle(\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article $articleToRemove)
+    {
         $this->article->detach($articleToRemove);
     }
 
     /**
-     * Returns the article
+     * sets url and path by the href
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article> $article
+     * @param string $value
      */
-    public function getArticle() {
-        return $this->article;
-    }
-
-    /**
-     * Sets the article
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Article> $article
-     * @return void
-     */
-    public function setArticle(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $article) {
-        $this->article = $article;
-    }
-
-    public function setFamilyName($familyName) {
-        $this->familyName = $familyName;
-    }
-
-    public function getFamilyName() {
-        return $this->familyName;
-    }
-
-    public function setGivenName($givenName) {
-        $this->givenName = $givenName;
-    }
-
-    public function getGivenName() {
-        return $this->givenName;
-    }
-
-    public function setUid($uid) {
-        $this->uid = $uid;
-    }
-
-    public function getUid() {
-        return $this->uid;
-    }
-
-    public function setPath($value) {
-        $this->path = $value;
-    }
-
-    public function getPath() {
-        return $this->path;
-    }
-
-    public function setUrl($value) {
-        $this->url = $value;
-    }
-
-    public function getUrl() {
-        return $this->url;
-    }
-
-    public function setHref($value) {
+    public function setHref($value)
+    {
         if (!$value)
             return;
 
@@ -164,23 +142,13 @@ class Creator extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
         $this->setPath($path);
     }
 
-    public function getHref() {
+    /**
+     * returns the href based on url and path
+     *
+     * @return string
+     */
+    public function getHref()
+    {
         return $this->getUrl() . $this->getPath();
-    }
-
-    public function setOrganization($value) {
-        $this->organization = $value;
-    }
-
-    public function getOrganization() {
-        return $this->organization;
-    }
-
-    public function setAddress($value) {
-        $this->address = $value;
-    }
-
-    public function getAddress() {
-        return $this->address;
     }
 }
