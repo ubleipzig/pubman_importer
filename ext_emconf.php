@@ -14,21 +14,23 @@ $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Pubman Importer',
 	'description' => 'imports data from Pubman',
 	'category' => 'plugin',
-	'author' => '',
-	'author_email' => '',
-	'state' => 'alpha',
+	'author' => 'Ulf Seltmann',
+	'author_email' => 'seltmann@ub.uni-leipzig.de',
+	'state' => 'stable',
 	'internal' => '',
 	'uploadfolder' => '0',
 	'createDirs' => '',
 	'clearCacheOnLoad' => 0,
-	'version' => '',
+	'version' => '0.2.0',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '6.2',
+			'typo3' => '6.2.0-7.9.99',
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
+			'shariff' => '*',
+			'realurl' => '1.12.8-2.99.99',
 		),
 	),
 );

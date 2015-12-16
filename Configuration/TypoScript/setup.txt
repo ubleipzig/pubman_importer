@@ -10,6 +10,7 @@ plugin.tx_pubmanimporter {
             url = https://docker.ub.intern.uni-leipzig.de
             path = /tei-converter/html/to.xsl
         }
+
     }
 
     view {
@@ -100,8 +101,12 @@ plugin.tx_pubmanimporter._CSS_DEFAULT_STYLE (
 
 )
 
-page.includeJS {
-    jquery = EXT:pubman_importer/Resources/Public/JavaScript/jquery-1.11.3.js
-    socialshareprivacy = EXT:pubman_importer/Resources/Public/JavaScript/jquery.socialshareprivacy.js
-    pubman_importer = EXT:pubman_importer/Resources/Public/JavaScript/main.js
-}
+page.javascriptLibs.jQuery = 1
+page.javascriptLibs.jQuery.version = latest
+page.javascriptLibs.jQuery.source = local
+
+page.includeCSS.shariff = EXT:rx_shariff/Resources/Public/Css/shariff.complete.css
+page.includeJSFooter.shariff = EXT:rx_shariff/Resources/Public/JavaScript/shariff.min.js
+
+
+page.includeJSFooter.pubman_importer = EXT:pubman_importer/Resources/Public/JavaScript/main.js

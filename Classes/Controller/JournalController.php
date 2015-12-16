@@ -58,8 +58,15 @@ class JournalController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         try {
             $Journals = $this->JournalRepository->findAll();
 
-            if (count($Journals) === 1) $this->redirect('show', NULL, NULL, ['Journal' => $Journals[0], 'multipleJournals' => false]);
-            else $this->view->assign('Journals', $Journals);
+            if (count($Journals) === 1) {
+                $this->uriBuilder->reset()->setArguments(array(
+                    'L' => $GLOBALS['TSFE']->sys_language_uid,
+                    'tx_pubmanimporter_journals[Journal]' => $Journals[0],
+                    'tx_pubmanimporter_journals[Context]' => false
+                ));
+                $uri = $this->uriBuilder->uriFor('show', array(), 'Journal', 'pubmanimporter', 'Journals');
+                $this->redirectToUri($uri);
+            } else $this->view->assign('Journals', $Journals);
         } catch (\Exception $e) {
             $this->view->assign('Error', $e);
         }
