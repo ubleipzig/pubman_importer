@@ -1,2 +1,0 @@
-In der socialshareprivacy.css Angaben wie Bildpfade, Margins etc aendern
-Ausserdem auch in der socialshareprivacy.js die Bildpfade aendern  

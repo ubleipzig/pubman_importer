@@ -29,7 +29,6 @@ $EM_CONF[$_EXTKEY] = array(
 		'conflicts' => array(
 		),
 		'suggests' => array(
-			'shariff' => '*',
 			'realurl' => '1.12.8-2.99.99',
 		),
 	),
