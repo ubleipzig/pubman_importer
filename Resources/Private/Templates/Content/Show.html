@@ -37,6 +37,16 @@
                 <a href="{Component.license}">{Component.license}</a>
             </f:if>
 
+            <f:if condition="{Item.component}">
+                <h4>
+                    <f:translate key="fulltext">Fulltext</f:translate>:
+                </h4>
+                <div class="components">
+                    <f:render partial="Component/List"
+                              arguments="{Components: Item.component, Item: Item, Article: Article, Issue: Issue, Journal: Journal, Context: Context, showOnlyDownloads:'true'}"/>
+                </div>
+            </f:if>
+
             <div class="fulltext">
                 <f:format.raw>{Component.content}</f:format.raw>
             </div>
