@@ -108,5 +108,4 @@ page.javascriptLibs.jQuery.source = local
 page.includeCSS.shariff = EXT:rx_shariff/Resources/Public/Css/shariff.complete.css
 page.includeJSFooter.shariff = EXT:rx_shariff/Resources/Public/JavaScript/shariff.min.js
 
-
 page.includeJSFooter.pubman_importer = EXT:pubman_importer/Resources/Public/JavaScript/main.js
