@@ -91,6 +91,12 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
             return $this->execute()->parse();
         }
 
+        if ($component->getMimeType() === 'application/html') {
+            $this->_path = $component->getPath();
+            return $this->execute()->getBody();
+
+        }
+
         if ($component->getMimeType() === 'application/pdf') {
             $this->_path = $component->getPath();
 
