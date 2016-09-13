@@ -238,7 +238,7 @@ abstract class RepositoryAbstract
             $id
         );
 
-        return  $this->execute()->parse()[0];
+        return $this->execute()->parse()[0];
     }
 
     /**

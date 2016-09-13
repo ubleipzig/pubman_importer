@@ -65,8 +65,8 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
         try {
             $Item = $this->ItemRepository->findByUid($Item);
-
-            foreach ($Item->getComponent() as $component) {
+            $this->ContentRepository->setAssets($Item->getComponent());
+            foreach ($this->ContentRepository->getAssets() as $component) {
                 if ($component->getUid() !== $Component) continue;
                 $component->setContent($this->ContentRepository->findByComponent($component));
                 $Component = $component;
@@ -83,6 +83,21 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $this->view->assign('Issue', $Issue);
         $this->view->assign('Journal', $Journal);
         $this->view->assign('Context', $Context);
+    }
+
+    /**
+     * action showConverted
+     *
+     * @param string $Component
+     * @param string $Item
+     * @param string $Article
+     * @param string $Issue
+     * @param string $Journal
+     * @param string $Context
+     * @return void
+     */
+    public function showConvertedAction($Component, $Item, $Article = false, $Issue = false, $Journal = false, $Context = false) {
+        return $this->showAction($Component, $Item, $Article = false, $Issue = false, $Journal = false, $Context = false);
     }
 
     /**

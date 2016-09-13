@@ -6,9 +6,8 @@
             <f:render partial="Error" arguments="{Error: Error}"/>
         </f:then>
         <f:else>
-            <div class="fulltext">
-                <f:format.raw>{Component.content}</f:format.raw>
-            </div>
+
+            <h3>{Item.title}</h3>
 
             <div class="creators">
                 <h4>
@@ -16,6 +15,13 @@
                 </h4>
                 <f:render partial="Creator/List" arguments="{Creators: Item.creator}"/>
             </div>
+
+            <f:if condition="{Item.abstract}">
+                <h4>
+                    <f:translate key="abstract">Abstract</f:translate>:
+                </h4>
+                <div class="abstract">{Item.abstract}</div>
+            </f:if>
 
             <f:if condition="{Item.subject}">
                 <h4>
@@ -40,6 +46,10 @@
                               arguments="{Components: Item.component, Item: Item, Article: Article, Issue: Issue, Journal: Journal, Context: Context, showOnlyDownloads:'true'}"/>
                 </div>
             </f:if>
+
+            <div class="fulltext">
+                <f:format.raw>{Component.content}</f:format.raw>
+            </div>
         </f:else>
     </f:if>
 

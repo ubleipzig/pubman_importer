@@ -97,4 +97,8 @@ class Component extends \LeipzigUniversityLibrary\PubmanImporter\Library\ItemAbs
     public function getHref() {
         return $this->getUrl() . $this->getPath();
     }
+
+    public function getFileName() {
+        return $this->fileName;
+    }
 }

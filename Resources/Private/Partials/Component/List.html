@@ -7,12 +7,12 @@
                 </f:link.action>
             </f:if>
             <f:if condition="{Component.mimeType} == 'application/xml'"><f:if condition="{showOnlyDownloads} != 'true'">
-                <f:link.action action="show" controller="Content"
+                <f:link.action action="showConverted" controller="Content"
                                arguments="{Component: Component, Item: Item, Article: Article, Issue: Issue, Journal: Journal, Context: Context}">
                     <f:translate key="html">XML (tei-converter)</f:translate>
                 </f:link.action>
             </f:if></f:if>
-            <f:if condition="{Component.mimeType} == 'application/html'"><f:if condition="{showOnlyDownloads} != 'true'">
+            <f:if condition="{Component.mimeType} == 'text/html'"><f:if condition="{showOnlyDownloads} != 'true'">
                 <f:link.action action="show" controller="Content"
                                arguments="{Component: Component, Item: Item, Article: Article, Issue: Issue, Journal: Journal, Context: Context}">
                     <f:translate key="html">HTML (le-tex)</f:translate>

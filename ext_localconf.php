@@ -10,14 +10,14 @@ if (!defined('TYPO3_MODE')) {
 		'Journal' => 'list, show',
 		'Issue' => 'show',
 		'Article' => 'show',
-		'Content' => 'show, stream'
+		'Content' => 'show, showConverted, stream'
 	),
 	// non-cacheable actions
 	array(
 		'Journal' => 'list, show',
 		'Issue' => 'show',
 		'Article' => 'show',
-		'Content' => 'show, stream',
+		'Content' => 'show, showConverted, stream'
 	)
 );
 
