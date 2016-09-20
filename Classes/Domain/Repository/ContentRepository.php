@@ -134,6 +134,7 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
      * @return string
      */
     public function convert() {
+        libxml_use_internal_errors(true);
         $this->_domDocument = \DOMDocument::loadHTML($this->_body);
         $this->_xpath = new \DOMXPath($this->_domDocument);
 

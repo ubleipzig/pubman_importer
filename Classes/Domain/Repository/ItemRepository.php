@@ -41,6 +41,8 @@ class ItemRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\Re
      * @return $this
      */
     public function parseComponents($nodeList, $model) {
+        $componentList = [];
+        $mimeTypeList = [];
         foreach ($nodeList as $node) {
             $component = GeneralUtility::makeInstance('\LeipzigUniversityLibrary\PubmanImporter\Domain\Model\Component');
             $component->setUid($node->getAttribute('objid'));
@@ -54,6 +56,14 @@ class ItemRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\Re
             $component->setStorage($contentNode->getAttribute('storage'));
             $component->setPath($contentNode->getAttribute('xlink:href'));
             $component->setUrl($this->getUrl());
+
+            $componentList[] = $component;
+            $mimeTypeList[] = $component->getMimeType();
+        }
+
+        array_multisort($mimeTypeList, SORT_DESC, $componentList);
+
+        foreach ($componentList as $component) {
             $model->addComponent($component);
         }
 
