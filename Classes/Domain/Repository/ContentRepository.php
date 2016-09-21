@@ -135,7 +135,8 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
      */
     public function convert() {
         libxml_use_internal_errors(true);
-        $this->_domDocument = \DOMDocument::loadHTML($this->_body);
+        $this->_domDocument = new \DOMDocument();
+        $this->_domDocument->loadHTML($this->_body);
         $this->_xpath = new \DOMXPath($this->_domDocument);
 
         $this->manipulateHref();
@@ -154,7 +155,9 @@ class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library
      * @return string
      */
     public function parse() {
-        $this->_domDocument = \DOMDocument::loadHTML($this->_body);
+        libxml_use_internal_errors(true);
+        $this->_domDocument = new \DOMDocument();
+        $this->_domDocument->loadHTML($this->_body);
         $this->_xpath = new \DOMXPath($this->_domDocument);
 
         $this->manipulateHref();

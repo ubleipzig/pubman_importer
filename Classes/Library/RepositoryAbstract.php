@@ -186,7 +186,9 @@ abstract class RepositoryAbstract
      * @return $this
      */
     public function parseXml() {
-        $this->_domDocument = \DOMDocument::loadXML($this->_body);
+        libxml_use_internal_errors(true);
+        $this->_domDocument = new \DOMDocument();
+        $this->_domDocument->loadXML($this->_body);
         $this->_xpath = new \DOMXPath($this->_domDocument);
 
         return $this;
