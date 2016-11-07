@@ -54,10 +54,6 @@ class JournalRepository extends ItemRepository {
     public function parse($pid = false) {
         $this->parseXml();
 
-        if (0 === (int)$this->countAll()) {
-            throw new \Exception('no data found');
-        }
-
         $result = [];
 
         foreach ($this->_xpath->query('/escidocItemList:item-list/escidocItem:item') as $itemNode) {

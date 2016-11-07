@@ -86,7 +86,15 @@ class JournalController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         try {
             $Journal = $this->JournalRepository->findByUid($Journal);
 
-            foreach ($this->IssueRepository->findByPid($Journal) as $Issue) {
+            $issueCollection = $this->IssueRepository->findByPid($Journal);
+
+            $issueTerms = array_map(function ($item) {
+                return intval($item->getIssueTerm());
+            }, $issueCollection);
+
+            array_multisort($issueTerms, SORT_DESC, SORT_NUMERIC, $issueCollection);
+
+            foreach ($issueCollection as $Issue) {
                 $Journal->addIssue($Issue);
             }
             $this->view->assign('Journal', $Journal);
