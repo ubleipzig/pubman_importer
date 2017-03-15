@@ -1,31 +1,8 @@
 plugin.tx_pubmanimporter {
-    settings {
-        url = https://publishing.ub.uni-leipzig.de
-        path = /search/SearchAndExport
-
-        escidocContentModelObjid = escidoc:2001
-        escidocContextObjid = ubl:10444
-
-        teiConverter {
-            url = https://docker.ub.intern.uni-leipzig.de
-            path = /tei-converter/html/to.xsl
-        }
-
-    }
-
     view {
         templateRootPath = {$plugin.tx_pubmanimporter.view.templateRootPath}
         partialRootPath = {$plugin.tx_pubmanimporter.view.partialRootPath}
         layoutRootPath = {$plugin.tx_pubmanimporter.view.layoutRootPath}
-    }
-
-    persistence {
-        storagePid = {$plugin.tx_pubmanimporter.persistence.storagePid}
-    }
-
-    features {
-        # uncomment the following line to enable the new Property Mapper.
-        # rewrittenPropertyMapper = 1
     }
 }
 

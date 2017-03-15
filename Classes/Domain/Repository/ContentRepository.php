@@ -1,227 +1,173 @@
 <?php
+/**
+ * Copyright (C) Leipzig University Library 2017 <info@ub.uni-leipzig.de>
+ *
+ * @author  Ulf Seltmann <seltmann@ub.uni-leipzig.de>
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 namespace LeipzigUniversityLibrary\PubmanImporter\Domain\Repository;
+
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/***************************************************************
- *
- *  Copyright notice
- *
- *  (c) 2014
- *
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
-
 /**
- * The repository for components content
+ * Class ContentRepository
  */
 class ContentRepository extends \LeipzigUniversityLibrary\PubmanImporter\Library\RepositoryAbstract
 {
-    /**
-     * the base uri where the content relies
-     *
-     * @var
-     */
-    protected $baseUri;
+	/**
+	 * The base uri where the content relies
+	 *
+	 * @var
+	 */
+	protected $baseUri;
 
-    /**
-     * all components
-     *
-     * @var array
-     */
-    protected $assets = [];
+	/**
+	 * All components
+	 *
+	 * @var array
+	 */
+	protected $assets = [];
 
-    /**
-     * the settings to
-     *
-     * @var array
-     */
-    protected $_teiConverter = [];
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->_httpRequest = GeneralUtility::makeInstance('\TYPO3\CMS\Core\Http\HttpRequest');
+	}
 
-    /**
-     * constructor
-     */
-    public function __construct()
-    {
-        $this->_httpRequest = GeneralUtility::makeInstance('\TYPO3\CMS\Core\Http\HttpRequest');
-    }
+	/**
+	 * Sets the base uri
+	 *
+	 * @param $value
+	 */
+	public function setBaseUri($value) {
+		$this->baseUri = $value;
+	}
 
-    /**
-     * sets the base uri
-     *
-     * @param $value
-     */
-    public function setBaseUri($value) {
-        $this->baseUri = $value;
-    }
+	/**
+	 * Returns the base uri
+	 *
+	 * @return mixed
+	 */
+	public function getBaseUri() {
+		return $this->baseUri;
+	}
 
-    /**
-     * returns the base uri
-     *
-     * @return mixed
-     */
-    public function getBaseUri() {
-        return $this->baseUri;
-    }
+	/**
+	 * Sets the assets
+	 *
+	 * @param $value
+	 */
+	public function setAssets($value) {
+		$this->assets = $value;
+	}
 
-    /**
-     * sets the assets
-     *
-     * @param $value
-     */
-    public function setAssets($value) {
-        $this->assets = $value;
-    }
+	/**
+	 * Returns the assets
+	 *
+	 * @return array
+	 */
+	public function getAssets() {
+		return $this->assets;
+	}
+	/**
+	 * Finds an object matching the given identifier.
+	 *
+	 * @param integer $component The identifier of the object to find
+	 * @return object The matching object if found, otherwise NULL
+	 * @api
+	 */
+	public function findByComponent($component)
+	{
+		if ($component->getMimeType() === 'text/html') {
+			$this->_path = $component->getPath();
+			return $this->execute()->parse();
 
-    /**
-     * returns the assets
-     *
-     * @return array
-     */
-    public function getAssets() {
-        return $this->assets;
-    }
-    /**
-     * Finds an object matching the given identifier.
-     *
-     * @param integer $component The identifier of the object to find
-     * @return object The matching object if found, otherwise NULL
-     * @api
-     */
-    public function findByComponent($component)
-    {
-        if ($component->getMimeType() === 'application/xml') {
-            $this->_url = $this->_teiConverter['url'];
-            $this->_path = $this->_teiConverter['path'];
-            $this->setOptions([
-                'querySettings' => ['uri' => $component->getHref()]
-            ]);
+		}
 
-            return $this->execute()->convert();
-        }
+		if ($component->getMimeType() === 'application/pdf') {
+			$this->_path = $component->getPath();
 
-        if ($component->getMimeType() === 'text/html') {
-            $this->_path = $component->getPath();
-            return $this->execute()->parse();
+			return $this->execute()->getBody();
+		}
+	}
 
-        }
+	/**
+	 * Extracts the content specific information
+	 *
+	 * @return string
+	 */
+	public function parse() {
+		libxml_use_internal_errors(true);
+		$this->_domDocument = new \DOMDocument();
+		$this->_domDocument->loadHTML($this->_body);
+		$this->_xpath = new \DOMXPath($this->_domDocument);
 
-        if ($component->getMimeType() === 'application/pdf') {
-            $this->_path = $component->getPath();
+		$this->manipulateHref();
+		$this->manipulateImageSrc();
 
-            return $this->execute()->getBody();
-        }
-    }
+		return $this->getBodyContent();
+	}
 
-    /**
-     * extracts the content specific information
-     *
-     * @return string
-     */
-    public function convert() {
-        libxml_use_internal_errors(true);
-        $this->_domDocument = new \DOMDocument();
-        $this->_domDocument->loadHTML($this->_body);
-        $this->_xpath = new \DOMXPath($this->_domDocument);
+	/**
+	 * Manipulates the anchors according to the base uri so that they work with a base-href element in html
+	 *
+	 * @return $this
+	 */
+	protected function manipulateHref() {
+		foreach ($this->_xpath->query('//*[@href]') as $node) {
+			$href = $node->getAttribute('href');
+			if (substr($href, 0, 1) !== '#') continue;
 
-        $this->manipulateHref();
-        $this->removeNode('//div[@class="stdheader autogenerated"]');
-        $this->removeNode('//span[@class="docTitle"]');
-        $this->removeNode('//span[@class="docAuthor"]');
-        $this->removeNode('//div[@class="stdfooter autogenerated"]/div[@class="footer"]');
-        $this->manipulateImageSrc();
+			$node->setAttribute('href', $this->getBaseUri() . $href);
+		}
 
-        return $this->getBodyContent();
-    }
+		return $this;
+	}
 
-    /**
-     * extracts the content specific information
-     *
-     * @return string
-     */
-    public function parse() {
-        libxml_use_internal_errors(true);
-        $this->_domDocument = new \DOMDocument();
-        $this->_domDocument->loadHTML($this->_body);
-        $this->_xpath = new \DOMXPath($this->_domDocument);
+	/**
+	 * Manipulates the anchors according to the base uri so that they work with a base-href element in html
+	 *
+	 * @return $this
+	 */
+	protected function manipulateImageSrc() {
+		foreach ($this->getAssets() as $asset) {
+			$path = sprintf('//div[@class="figure"]/img[@src="%s"]', $asset->getFileName());
+			foreach ($this->_xpath->query($path) as $node) {
+				$node->setAttribute('src', $asset->getHref());
+			}
+		}
 
-        $this->manipulateHref();
-        $this->manipulateImageSrc();
+		return $this;
+	}
 
-        return $this->getBodyContent();
-    }
+	/**
+	 * Returns the body as string
+	 *
+	 * @return string
+	 */
+	protected function getBodyContent() {
+		$value = '';
 
-    /**
-     * manipulates the anchors according to the base uri so that they work with a base-href element in html
-     *
-     * @return $this
-     */
-    protected function manipulateHref() {
-        foreach ($this->_xpath->query('//*[@href]') as $node) {
-            $href = $node->getAttribute('href');
-            if (substr($href, 0, 1) !== '#') continue;
+		foreach ($this->_xpath->query('/html/body')->item(0)->childNodes as $node) {
+			$value .= $this->_domDocument->saveXML($node);
+		}
 
-            $node->setAttribute('href', $this->getBaseUri() . $href);
-        }
-
-        return $this;
-    }
-
-    /**
-     * manipulates the anchors according to the base uri so that they work with a base-href element in html
-     *
-     * @return $this
-     */
-    protected function manipulateImageSrc() {
-        foreach ($this->getAssets() as $asset) {
-            $path = sprintf('//div[@class="figure"]/img[@src="%s"]', $asset->getFileName());
-            foreach ($this->_xpath->query($path) as $node) {
-                $node->setAttribute('src', $asset->getHref());
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * removes a node from dom
-     *
-     * @param string $xpath
-     * @return $this
-     */
-    protected function removeNode($xpath) {
-        $node = $this->_xpath->query($xpath)->item(0);
-        $node && $node->parentNode->removeChild($node);
-        return $this;
-    }
-
-    /**
-     * returns the body as string
-     *
-     * @return string
-     */
-    protected function getBodyContent() {
-        $value = '';
-
-        foreach ($this->_xpath->query('/html/body')->item(0)->childNodes as $node) {
-            $value .= $this->_domDocument->saveXML($node);
-        }
-
-        return $value;
-    }
+		return $value;
+	}
 }

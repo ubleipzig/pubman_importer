@@ -36,6 +36,21 @@
 			<trans-unit id="tx_pubmanimporter_domain_model_component">
 				<source>Component</source>
 			</trans-unit>
+			<trans-unit id="flexforms.sheetDisplayOptions">
+				<source>Query Options</source>
+			</trans-unit>
+			<trans-unit id="flexforms.serverUrl">
+				<source>Escidoc Server URL</source>
+			</trans-unit>
+			<trans-unit id="flexforms.serverPath">
+				<source>Escidoc Server Path</source>
+			</trans-unit>
+			<trans-unit id="flexforms.escidocContentModelObjId">
+				<source>Escidoc Content Model Object Id</source>
+			</trans-unit>
+			<trans-unit id="flexforms.escidocContextObjId">
+				<source>Escidoc Context Object Id</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
