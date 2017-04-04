@@ -95,13 +95,13 @@ class ContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 
 			foreach ($Item->getComponent() as $component) {
 				if ($component->getUid() !== $Component) continue;
-				$component->setContent($this->ContentRepository->findByComponent($component));
 				$this->response->setHeader('Content-Type', 'application/pdf');
-				$this->response->setContent($component->getContent());
+				$this->response->setHeader('Content-Disposition', 'inline; filename="' . $component->getFilename() . '"');
 				$this->response->send();
+				$this->ContentRepository->findByComponent($component);
 				exit;
 			}
-		}catch (\Exception $e) {
+		} catch (\Exception $e) {
 			$this->view->assign('Error', $e);
 		}
 	}

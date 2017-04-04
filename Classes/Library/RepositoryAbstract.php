@@ -184,13 +184,28 @@ abstract class RepositoryAbstract
 	}
 
 	/**
+	 * Streams directly to output without buffering or copying to memory
+	 *
+	 * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
+	 */
+	public function stream() {
+		$this->createQuery();
+
+		$uri = $this->_url . $this->_path . (empty($this->_query) ? '' : '?' . $this->_query);
+
+		if (ob_get_level()) ob_end_clean();
+		readfile($uri);
+
+		return $this;
+	}
+
+	/**
 	 * Returns a query for objects of this repository
 	 *
 	 * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
 	 * @throws \Exception if http request failed
 	 */
-	public function execute()
-	{
+	public function execute() {
 		$this->createQuery();
 
 		$response = $this->_httpRequest->setUrl($this->_url . $this->_path . (empty($this->_query) ? '' : '?' . $this->_query))->send();
