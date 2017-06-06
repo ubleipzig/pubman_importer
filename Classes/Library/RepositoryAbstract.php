@@ -194,7 +194,15 @@ abstract class RepositoryAbstract
 		$uri = $this->_url . $this->_path . (empty($this->_query) ? '' : '?' . $this->_query);
 
 		if (ob_get_level()) ob_end_clean();
-		readfile($uri);
+
+		$curlRequest = curl_init();
+		curl_setopt($curlRequest, CURLOPT_URL, $uri);
+		curl_setopt($curlRequest, CURLOPT_RETURNTRANSFER, false);
+		curl_setopt($curlRequest, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curlRequest, CURLOPT_CONNECTTIMEOUT ,30);
+		curl_setopt($curlRequest, CURLOPT_TIMEOUT, 400);
+		curl_exec($curlRequest);
+		curl_close($curlRequest);
 
 		return $this;
 	}
